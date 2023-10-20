@@ -5,7 +5,7 @@
     "info": {
       "name": "QBeatSaberPlus-NoteTweaker",
       "id": "qbeatsaberplus-notetweaker",
-      "version": "2.0.0",
+      "version": "0.1.0-v6.2.0",
       "url": "https://github.com/hardcpp/QBeatSaberPlus_NoteTweaker",
       "additionalData": {
         "overrideSoName": "libqbeatsaberplus-notetweaker.so",
@@ -54,7 +54,7 @@
       },
       {
         "id": "chatplex-sdk-bs",
-        "versionRange": "^0.0.2-v6.1.1",
+        "versionRange": "^0.1.0-v6.2.0",
         "additionalData": {
           "private": true
         }
@@ -88,13 +88,13 @@
     {
       "dependency": {
         "id": "chatplex-sdk-bs",
-        "versionRange": "=0.0.2-v6.1.1",
+        "versionRange": "=0.1.0-v6.2.0",
         "additionalData": {
           "overrideSoName": "libchatplex-sdk-bs.so",
           "cmake": true
         }
       },
-      "version": "0.0.2-v6.1.1"
+      "version": "0.1.0-v6.2.0"
     },
     {
       "dependency": {
