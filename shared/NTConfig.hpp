@@ -6,7 +6,10 @@
 
 namespace QBeatSaberPlus_NoteTweaker {
 
-    using namespace UnityEngine;
+    namespace _u
+    {
+        using namespace UnityEngine;
+    }
 
     class NTConfig : public CP_SDK::Config::JsonConfig
     {
@@ -17,30 +20,30 @@ namespace QBeatSaberPlus_NoteTweaker {
             {
                 std::u16string Name             = u"New profile";
 
-                float NotesScale                = 0.9f;
-                bool  NotesShowPrecisonDots     = true;
-                float NotesPrecisonDotsScale    = 0.40f;
+                float       NotesScale                = 0.9f;
+                bool        NotesShowPrecisonDots     = true;
+                float       NotesPrecisonDotsScale    = 0.40f;
 
-                float ArrowsScale               = 1.0f;
-                float ArrowsIntensity           = 1.0f;
-                bool  ArrowsOverrideColors      = false;
-                Color ArrowsLColor              = Color(0.12f, 0.75f, 1.00f, 1.00f);
-                Color ArrowsRColor              = Color(0.12f, 0.75f, 1.00f, 1.00f);
+                float       ArrowsScale               = 1.0f;
+                float       ArrowsIntensity           = 1.0f;
+                bool        ArrowsOverrideColors      = false;
+                _u::Color   ArrowsLColor              = _u::Color(0.12f, 0.75f, 1.00f, 1.00f);
+                _u::Color   ArrowsRColor              = _u::Color(0.12f, 0.75f, 1.00f, 1.00f);
 
-                float DotsScale                 = 0.85f;
-                float DotsIntensity             = 1.0f;
-                bool  DotsOverrideColors        = false;
-                Color DotsLColor                = Color(0.12f, 0.75f, 1.00f, 1.00f);
-                Color DotsRColor                = Color(0.12f, 0.75f, 1.00f, 1.00f);
+                float       DotsScale                 = 0.85f;
+                float       DotsIntensity             = 1.0f;
+                bool        DotsOverrideColors        = false;
+                _u::Color   DotsLColor                = _u::Color(0.12f, 0.75f, 1.00f, 1.00f);
+                _u::Color   DotsRColor                = _u::Color(0.12f, 0.75f, 1.00f, 1.00f);
 
-                float BombsScale                = 1.0f;
-                bool  BombsOverrideColor        = false;
-                Color BombsColor                = Color(1.0000f, 0.0000f, 0.6469f, 1.0f);
+                float       BombsScale                = 1.0f;
+                bool        BombsOverrideColor        = false;
+                _u::Color   BombsColor                = _u::Color(1.0000f, 0.0000f, 0.6469f, 1.0f);
 
-                float ArcsIntensity             = 1.00f;
-                bool  ArcsHaptics               = true;
+                float       ArcsIntensity             = 1.00f;
+                bool        ArcsHaptics               = true;
 
-                float BurstNotesDotsScale       = 1.5f;
+                float       BurstNotesDotsScale       = 1.5f;
 
                 static std::shared_ptr<_Profile> AsDefault();
 

@@ -154,7 +154,7 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
 
         if (!PColorNoteVisuals_WasInit)
         {
-            CP_SDK::ChatPlexSDK::OnGenericSceneChange += [](CP_SDK::ChatPlexSDK::EGenericScene x) { if (x == CP_SDK::ChatPlexSDK::EGenericScene::Menu) PColorNoteVisuals_Cache.clear(); };
+            CP_SDK::ChatPlexSDK::OnGenericSceneChange += [](CP_SDK::EGenericScene x) { if (x == CP_SDK::EGenericScene::Menu) PColorNoteVisuals_Cache.clear(); };
             PColorNoteVisuals_WasInit = true;
         }
     }

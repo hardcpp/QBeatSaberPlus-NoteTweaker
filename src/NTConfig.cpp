@@ -2,6 +2,8 @@
 
 #include <CP_SDK/ChatPlexSDK.hpp>
 
+using namespace UnityEngine;
+
 namespace QBeatSaberPlus_NoteTweaker {
 
     CP_SDK_CONFIG_JSONCONFIG_INSTANCE_IMPL(NTConfig);
