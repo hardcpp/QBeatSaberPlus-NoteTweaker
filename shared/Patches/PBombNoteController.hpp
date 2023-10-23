@@ -9,7 +9,7 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
     /// @brief BombNoteController patch
     class PBombNoteController
     {
-        DISABLE_CONSTRUCTORS(PBombNoteController);
+        CP_SDK_NO_DEF_CTORS(PBombNoteController);
 
         public:
             /// @brief Set from configuration

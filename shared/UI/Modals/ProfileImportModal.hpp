@@ -14,9 +14,9 @@ namespace QBeatSaberPlus_NoteTweaker::UI::Modals {
     /// @brief Profile import modal
     class ProfileImportModal : public CP_SDK::UI::IModal
     {
-        CP_SDK_IL2CPP_INHERIT_CUSTOM("QBeatSaberPlus_NoteTweaker.Modals", ProfileImportModal, CP_SDK::UI::IModal);
-        CP_SDK_IL2CPP_DECLARE_CTOR_CHAIN(ProfileImportModal, CP_SDK::UI::IModal);
-        CP_SDK_IL2CPP_DECLARE_DTOR_MONOBEHAVIOUR_CHAIN(ProfileImportModal, CP_SDK::UI::IModal);
+        CP_SDK_IL2CPP_INHERIT("QBeatSaberPlus_NoteTweaker.Modals", ProfileImportModal, CP_SDK::UI::IModal);
+        CP_SDK_IL2CPP_DECLARE_CTOR_CHILD(ProfileImportModal);
+        CP_SDK_IL2CPP_DECLARE_DTOR_MONOBEHAVIOUR_CHILD(ProfileImportModal);
 
         private:
             _u::XUIDropdown::Ptr m_Dropdown;

@@ -40,7 +40,7 @@ namespace QBeatSaberPlus_NoteTweaker::UI {
     ////////////////////////////////////////////////////////////////////////////
 
     /// @brief Constructor
-    CP_SDK_IL2CPP_DECLARE_CTOR_CHAIN_IMPL(SettingsRightView, CP_SDK::UI::ViewController)
+    CP_SDK_IL2CPP_DECLARE_CTOR_IMPL(SettingsRightView)
     {
         OnViewCreation      = {this, &SettingsRightView::OnViewCreation_Impl};
         OnViewActivation    = {this, &SettingsRightView::OnViewActivation_Impl};
@@ -48,7 +48,7 @@ namespace QBeatSaberPlus_NoteTweaker::UI {
         OnViewDestruction   = {this, &SettingsRightView::OnViewDestruction_Impl};
     }
     /// @brief Destructor
-    CP_SDK_IL2CPP_DECLARE_DTOR_MONOBEHAVIOUR_CHAIN_IMPL(SettingsRightView, CP_SDK::UI::ViewController)
+    CP_SDK_IL2CPP_DECLARE_DTOR_MONOBEHAVIOUR_IMPL(SettingsRightView)
     {
 
     }

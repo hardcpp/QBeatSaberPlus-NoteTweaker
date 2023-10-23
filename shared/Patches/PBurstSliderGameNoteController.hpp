@@ -7,7 +7,7 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
     /// @brief GameNoteController Patch
     class PBurstSliderGameNoteController
     {
-        DISABLE_CONSTRUCTORS(PBurstSliderGameNoteController);
+        CP_SDK_NO_DEF_CTORS(PBurstSliderGameNoteController);
 
         public:
             /// @brief Set from configuration

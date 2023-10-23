@@ -30,7 +30,7 @@ namespace QBeatSaberPlus_NoteTweaker::UI {
     ////////////////////////////////////////////////////////////////////////////
 
     /// @brief Constructor
-    CP_SDK_IL2CPP_DECLARE_CTOR_CHAIN_IMPL(SettingsMainView, CP_SDK::UI::ViewController)
+    CP_SDK_IL2CPP_DECLARE_CTOR_IMPL(SettingsMainView)
     {
         m_PreventChanges = false;
 
@@ -38,7 +38,7 @@ namespace QBeatSaberPlus_NoteTweaker::UI {
         OnViewDeactivation  = {this, &SettingsMainView::OnViewDeactivation_Impl};
     }
     /// @brief Destructor
-    CP_SDK_IL2CPP_DECLARE_DTOR_MONOBEHAVIOUR_CHAIN_IMPL(SettingsMainView, CP_SDK::UI::ViewController)
+    CP_SDK_IL2CPP_DECLARE_DTOR_MONOBEHAVIOUR_IMPL(SettingsMainView)
     {
 
     }

@@ -16,7 +16,7 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
     /// @brief ColorNoteVisuals patch
     class PColorNoteVisuals
     {
-        DISABLE_CONSTRUCTORS(PColorNoteVisuals);
+        CP_SDK_NO_DEF_CTORS(PColorNoteVisuals);
 
         public:
             /// @brief Set from configuration

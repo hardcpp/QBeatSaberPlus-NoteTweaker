@@ -15,13 +15,13 @@ namespace QBeatSaberPlus_NoteTweaker::UI::Modals {
     ////////////////////////////////////////////////////////////////////////////
 
     /// @brief Constructor
-    CP_SDK_IL2CPP_DECLARE_CTOR_CHAIN_IMPL(ProfileImportModal, CP_SDK::UI::IModal)
+    CP_SDK_IL2CPP_DECLARE_CTOR_IMPL(ProfileImportModal)
     {
         OnShow  = {this, &ProfileImportModal::Impl_OnShow};
         OnClose = {this, &ProfileImportModal::Impl_OnClose};
     }
     /// @brief Destructor
-    CP_SDK_IL2CPP_DECLARE_DTOR_MONOBEHAVIOUR_CHAIN_IMPL(ProfileImportModal, CP_SDK::UI::IModal)
+    CP_SDK_IL2CPP_DECLARE_DTOR_MONOBEHAVIOUR_IMPL(ProfileImportModal)
     {
 
     }

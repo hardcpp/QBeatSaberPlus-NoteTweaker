@@ -16,9 +16,9 @@ namespace QBeatSaberPlus_NoteTweaker::UI {
     /// @brief Settings right view controller
     class SettingsRightView : public CP_SDK::UI::ViewController
     {
-        CP_SDK_IL2CPP_INHERIT_CUSTOM("QBeatSaberPlus_NoteTweaker.UI", SettingsRightView, CP_SDK::UI::ViewController);
-        CP_SDK_IL2CPP_DECLARE_CTOR_CHAIN(SettingsRightView, CP_SDK::UI::ViewController);
-        CP_SDK_IL2CPP_DECLARE_DTOR_MONOBEHAVIOUR_CHAIN(SettingsRightView, CP_SDK::UI::ViewController);
+        CP_SDK_IL2CPP_INHERIT("QBeatSaberPlus_NoteTweaker.UI", SettingsRightView, CP_SDK::UI::ViewController);
+        CP_SDK_IL2CPP_DECLARE_CTOR_CHILD(SettingsRightView);
+        CP_SDK_IL2CPP_DECLARE_DTOR_MONOBEHAVIOUR_CHILD(SettingsRightView);
         CP_SDK_UI_VIEW_CONTROLLER_INSTANCE();
 
         private:

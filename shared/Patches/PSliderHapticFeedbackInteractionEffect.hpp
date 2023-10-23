@@ -7,7 +7,7 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
     /// @brief SliderHapticFeedbackInteractionEffect patch
     class PSliderHapticFeedbackInteractionEffect
     {
-        DISABLE_CONSTRUCTORS(PSliderHapticFeedbackInteractionEffect);
+        CP_SDK_NO_DEF_CTORS(PSliderHapticFeedbackInteractionEffect);
 
         public:
             /// @brief Set from configuration

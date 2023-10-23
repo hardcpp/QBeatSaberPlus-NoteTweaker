@@ -7,7 +7,7 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
     /// @brief SliderController patch
     class PSliderController
     {
-        DISABLE_CONSTRUCTORS(PSliderController);
+        CP_SDK_NO_DEF_CTORS(PSliderController);
 
         public:
             /// @brief Set from configuration
