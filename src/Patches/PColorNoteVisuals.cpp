@@ -154,7 +154,15 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
 
         if (!PColorNoteVisuals_WasInit)
         {
-            CP_SDK::ChatPlexSDK::OnGenericSceneChange += [](CP_SDK::EGenericScene x) { if (x == CP_SDK::EGenericScene::Menu) PColorNoteVisuals_Cache.clear(); };
+            CP_SDK::ChatPlexSDK::OnGenericSceneChange += [](CP_SDK::EGenericScene x)
+            {
+                if (x != CP_SDK::EGenericScene::Menu)
+                    return;
+
+                if (!PColorNoteVisuals_Cache.empty())
+                    PColorNoteVisuals_Cache.clear();
+            };
+
             PColorNoteVisuals_WasInit = true;
         }
     }
@@ -178,6 +186,9 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
             if (l_Cache->colorNoteVisuals == __Instance)
                 break;
         }
+
+        if (!PColorNoteVisuals_WasInit)
+            PColorNoteVisuals::Init();
 
         if (!l_Cache || l_Cache->colorNoteVisuals != __Instance)
         {

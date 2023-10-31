@@ -30,7 +30,7 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
             static void SetDotScaleFromConfig(std::shared_ptr<NTConfig::_Profile>& p_Profile);
             static void SetDotColorsFromConfig(std::shared_ptr<NTConfig::_Profile>& p_Profile);
 
-        private:
+        public:
             /// @brief Init specific data and register events
             static void Init();
 
