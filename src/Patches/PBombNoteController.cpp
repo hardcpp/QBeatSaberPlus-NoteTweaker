@@ -47,14 +47,14 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
     ////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
 
-    static bool     PBombNoteController_Enabled     = false;
-    static bool     PBombNoteController_TempEnabled = false;
-    static int32_t  PBombNoteController_ColorID     = 0;
+    static bool     PBombNoteController_Enabled         = false;
+    static bool     PBombNoteController_TempEnabled     = false;
+    static int32_t  PBombNoteController_ColorID         = 0;
     static Color    PBombNoteController_Color;
-    static Vector3  PBombNoteController_Scale;
-    static float    PBombNoteController_InvScale;
-    static Vector3  PBombNoteController_TempScale;
-    static float    PBombNoteController_TempInvScale;
+    static Vector3  PBombNoteController_Scale           = Vector3(1.0f, 1.0f, 1.0f);
+    static float    PBombNoteController_InvScale        = 1.0f;
+    static Vector3  PBombNoteController_TempScale       = Vector3(1.0f, 1.0f, 1.0f);
+    static float    PBombNoteController_TempInvScale    = 1.0f;
 
     static bool                                     PBombNoteController_WasInit = false;
     static std::vector<PBombNoteControllerCache>    PBombNoteController_Cache;
