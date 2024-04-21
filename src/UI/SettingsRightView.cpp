@@ -3,6 +3,7 @@
 #include "Logger.hpp"
 
 #include <CP_SDK/Unity/Extensions/ColorU.hpp>
+#include <CP_SDK/Unity/Operators.hpp>
 
 #include <GlobalNamespace/BeatmapObjectsInstaller.hpp>
 #include <GlobalNamespace/BurstSliderGameNoteController.hpp>
@@ -201,13 +202,13 @@ namespace QBeatSaberPlus_NoteTweaker::UI {
 
         auto& l_Profile = NTConfig::Instance()->GetActiveProfile();
 
-        m_CustomPreviewTL->get_transform()->set_localScale(Vector3::op_Multiply(Vector3::get_one(), l_Profile->NotesScale));
-        m_CustomPreviewTR->get_transform()->set_localScale(Vector3::op_Multiply(Vector3::get_one(), l_Profile->NotesScale));
-        m_CustomPreviewDL->get_transform()->set_localScale(Vector3::op_Multiply(Vector3::get_one(), l_Profile->NotesScale));
-        m_CustomPreviewDR->get_transform()->set_localScale(Vector3::op_Multiply(Vector3::get_one(), l_Profile->NotesScale));
+        m_CustomPreviewTL->get_transform()->set_localScale(Vector3::get_one() * l_Profile->NotesScale);
+        m_CustomPreviewTR->get_transform()->set_localScale(Vector3::get_one() * l_Profile->NotesScale);
+        m_CustomPreviewDL->get_transform()->set_localScale(Vector3::get_one() * l_Profile->NotesScale);
+        m_CustomPreviewDR->get_transform()->set_localScale(Vector3::get_one() * l_Profile->NotesScale);
 
-        auto l_PlayerData    = Resources::FindObjectsOfTypeAll<PlayerDataModel*>()->First()->playerData;
-        auto l_ColorScheme   = l_PlayerData->colorSchemesSettings->overrideDefaultColors ? l_PlayerData->colorSchemesSettings->GetSelectedColorScheme() : nullptr;
+        auto l_PlayerData    = Resources::FindObjectsOfTypeAll<PlayerDataModel*>()->First()->____playerData;
+        auto l_ColorScheme   = l_PlayerData->get_colorSchemesSettings()->overrideDefaultColors ? l_PlayerData->get_colorSchemesSettings()->GetSelectedColorScheme() : nullptr;
         auto l_LeftColor     = l_ColorScheme != nullptr ? l_ColorScheme->saberAColor : Color(0.658823549747467f, 0.125490203499794f,  0.125490203499794f, 1.0f);
         auto l_RightColor    = l_ColorScheme != nullptr ? l_ColorScheme->saberBColor : Color(0.125490203499794f, 0.3921568691730499f, 0.658823549747467f, 1.0f);
 
@@ -229,11 +230,11 @@ namespace QBeatSaberPlus_NoteTweaker::UI {
 
         PatchBomb(m_CustomPreviewBomb.Ptr(), l_Profile->BombsOverrideColor ? l_Profile->BombsColor : Color(0.251f, 0.251f, 0.251f, 1.0f));
 
-        m_CustomPreviewBomb->get_transform()->set_localScale(Vector3::op_Multiply(Vector3::get_one(), l_Profile->BombsScale));
+        m_CustomPreviewBomb->get_transform()->set_localScale(Vector3::get_one() * l_Profile->BombsScale);
 
         PatchCircle(m_CustomPreviewSliderFill.Ptr(), l_Profile->BurstNotesDotsScale, ColorU::WithAlpha(l_DotLColor, l_Profile->DotsIntensity), true);
 
-        m_CustomPreviewSliderFill->get_transform()->set_localScale(Vector3::op_Multiply(Vector3::get_one(), l_Profile->NotesScale));
+        m_CustomPreviewSliderFill->get_transform()->set_localScale(Vector3::get_one() * l_Profile->NotesScale);
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -266,10 +267,10 @@ namespace QBeatSaberPlus_NoteTweaker::UI {
         m_CustomPreviewDL->set_name("BSP_NOTE_TWEAKER_CUSTOM");
         m_CustomPreviewDR->set_name("BSP_NOTE_TWEAKER_CUSTOM");
 
-        m_CustomPreviewTL->get_transform()->set_localPosition(Vector3::op_Subtraction(Vector3::get_zero(), Vector3(0, -0.25f, 1.0f)));
-        m_CustomPreviewTR->get_transform()->set_localPosition(Vector3::op_Subtraction(Vector3::get_zero(), Vector3(0, -0.25f, 0.5f)));
-        m_CustomPreviewDL->get_transform()->set_localPosition(Vector3::op_Subtraction(Vector3::get_zero(), Vector3(0,  0.25f, 1.0f)));
-        m_CustomPreviewDR->get_transform()->set_localPosition(Vector3::op_Subtraction(Vector3::get_zero(), Vector3(0,  0.25f, 0.5f)));
+        m_CustomPreviewTL->get_transform()->set_localPosition(Vector3::get_zero() - Vector3(0, -0.25f, 1.0f));
+        m_CustomPreviewTR->get_transform()->set_localPosition(Vector3::get_zero() - Vector3(0, -0.25f, 0.5f));
+        m_CustomPreviewDL->get_transform()->set_localPosition(Vector3::get_zero() - Vector3(0,  0.25f, 1.0f));
+        m_CustomPreviewDR->get_transform()->set_localPosition(Vector3::get_zero() - Vector3(0,  0.25f, 0.5f));
 
         m_CustomPreviewTL->get_transform()->set_localRotation(Quaternion::Euler(0, 272, 0));
         m_CustomPreviewTR->get_transform()->set_localRotation(Quaternion::Euler(0, 272, 0));
@@ -286,7 +287,7 @@ namespace QBeatSaberPlus_NoteTweaker::UI {
         m_CustomPreviewBomb = GameObject::Instantiate(p_BombTemplate);
         m_CustomPreviewBomb->get_transform()->SetParent(m_Parent->get_transform(), false);
         m_CustomPreviewBomb->set_name("BSP_NOTE_TWEAKER_CUSTOM");
-        m_CustomPreviewBomb->get_transform()->set_localPosition(Vector3::op_Subtraction(Vector3::get_zero(), Vector3(0, 0.75f, 0.75f)));
+        m_CustomPreviewBomb->get_transform()->set_localPosition(Vector3::get_zero() - Vector3(0, 0.75f, 0.75f));
         m_CustomPreviewBomb->SetActive(true);
 
         PatchBomb(m_CustomPreviewBomb.Ptr(), l_Profile->BombsOverrideColor ? l_Profile->BombsColor : Color(0.251f, 0.251f, 0.251f, 1.0f));
@@ -296,7 +297,7 @@ namespace QBeatSaberPlus_NoteTweaker::UI {
         m_CustomPreviewSliderFill = GameObject::Instantiate(m_BurstFillTemplate);
         m_CustomPreviewSliderFill->get_transform()->SetParent(m_Parent->get_transform(), false);
         m_CustomPreviewSliderFill->set_name("BSP_NOTE_TWEAKER_CUSTOM");
-        m_CustomPreviewSliderFill->get_transform()->set_localPosition(Vector3::op_Subtraction(Vector3::get_zero(), Vector3(0, -0.75f, 0.75f)));
+        m_CustomPreviewSliderFill->get_transform()->set_localPosition(Vector3::get_zero() - Vector3(0, -0.75f, 0.75f));
         m_CustomPreviewSliderFill->get_transform()->set_localRotation(Quaternion::Euler(0, 272, 0));
         m_CustomPreviewSliderFill->SetActive(true);
 
@@ -317,10 +318,10 @@ namespace QBeatSaberPlus_NoteTweaker::UI {
         m_DefaultPreviewTR->set_name("BSP_NOTE_TWEAKER_DEFAULT");
         m_DefaultPreviewDL->set_name("BSP_NOTE_TWEAKER_DEFAULT");
         m_DefaultPreviewDR->set_name("BSP_NOTE_TWEAKER_DEFAULT");
-        m_DefaultPreviewTL->get_transform()->set_localPosition(Vector3::op_Addition(Vector3::get_zero(), Vector3(0,  0.25f, 0.5f)));
-        m_DefaultPreviewTR->get_transform()->set_localPosition(Vector3::op_Addition(Vector3::get_zero(), Vector3(0,  0.25f, 1.0f)));
-        m_DefaultPreviewDL->get_transform()->set_localPosition(Vector3::op_Addition(Vector3::get_zero(), Vector3(0, -0.25f, 0.5f)));
-        m_DefaultPreviewDR->get_transform()->set_localPosition(Vector3::op_Addition(Vector3::get_zero(), Vector3(0, -0.25f, 1.0f)));
+        m_DefaultPreviewTL->get_transform()->set_localPosition(Vector3::get_zero() + Vector3(0,  0.25f, 0.5f));
+        m_DefaultPreviewTR->get_transform()->set_localPosition(Vector3::get_zero() + Vector3(0,  0.25f, 1.0f));
+        m_DefaultPreviewDL->get_transform()->set_localPosition(Vector3::get_zero() + Vector3(0, -0.25f, 0.5f));
+        m_DefaultPreviewDR->get_transform()->set_localPosition(Vector3::get_zero() + Vector3(0, -0.25f, 1.0f));
         m_DefaultPreviewTL->get_transform()->set_localRotation(Quaternion::Euler(0, 272, 0));
         m_DefaultPreviewTR->get_transform()->set_localRotation(Quaternion::Euler(0, 272, 0));
         m_DefaultPreviewDL->get_transform()->set_localRotation(Quaternion::Euler(0, 272, 0));
@@ -344,7 +345,7 @@ namespace QBeatSaberPlus_NoteTweaker::UI {
         m_DefaultPreviewBomb = GameObject::Instantiate(p_BombTemplate);
         m_DefaultPreviewBomb->get_transform()->SetParent(m_Parent->get_transform(), false);
         m_DefaultPreviewBomb->set_name("BSP_NOTE_TWEAKER_DEFAULT");
-        m_DefaultPreviewBomb->get_transform()->set_localPosition(Vector3::op_Addition(Vector3::get_zero(), Vector3(0, -0.75f, 0.75f)));
+        m_DefaultPreviewBomb->get_transform()->set_localPosition(Vector3::get_zero() + Vector3(0, -0.75f, 0.75f));
         m_DefaultPreviewBomb->SetActive(true);
 
         /// ==============
@@ -352,7 +353,7 @@ namespace QBeatSaberPlus_NoteTweaker::UI {
         m_DefaultPreviewSliderFill = GameObject::Instantiate(m_BurstFillTemplate);
         m_DefaultPreviewSliderFill->get_transform()->SetParent(m_Parent->get_transform(), false);
         m_DefaultPreviewSliderFill->set_name("BSP_NOTE_TWEAKER_DEFAULT");
-        m_DefaultPreviewSliderFill->get_transform()->set_localPosition(Vector3::op_Addition(Vector3::get_zero(), Vector3(0, 0.75f, 0.75f)));
+        m_DefaultPreviewSliderFill->get_transform()->set_localPosition(Vector3::get_zero() + Vector3(0, 0.75f, 0.75f));
         m_DefaultPreviewSliderFill->get_transform()->set_localRotation(Quaternion::Euler(0, 272, 0));
         m_DefaultPreviewSliderFill->SetActive(true);
 
@@ -454,7 +455,7 @@ namespace QBeatSaberPlus_NoteTweaker::UI {
     /// @param p_Show  Show
     void SettingsRightView::PatchArrow(GameObject* p_Note, float p_Scale, Color p_Color, bool p_Show)
     {
-        p_Note->get_transform()->Find("NoteArrow")->get_transform()->set_localScale(Vector3::op_Multiply(Vector3::get_one(), p_Scale));
+        p_Note->get_transform()->Find("NoteArrow")->get_transform()->set_localScale(Vector3::get_one() * p_Scale);
         p_Note->get_transform()->Find("NoteArrow")->get_gameObject()->SetActive(p_Show);
 
         auto l_Glow = p_Note->get_transform()->Find("NoteArrowGlow");

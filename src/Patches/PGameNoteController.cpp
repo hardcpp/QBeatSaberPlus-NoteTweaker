@@ -2,6 +2,7 @@
 #include "NTConfig.hpp"
 #include "Logger.hpp"
 
+#include <CP_SDK/Unity/Operators.hpp>
 #include <CP_SDK/Utils/MonoPtr.hpp>
 #include <CP_SDK_BS/Game/LevelData.hpp>
 #include <CP_SDK_BS/Game/Logic.hpp>
@@ -47,8 +48,8 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
         auto  l_NoteScale         = FilterScale(NTConfig::Instance()->Enabled ? l_Profile->NotesScale : 1.0f);
 
         PGameNoteController_Enabled               = IsScaleAllowed() ? NTConfig::Instance()->Enabled : false;
-        PGameNoteController_NoteScale             = Vector3::op_Multiply(       l_NoteScale, Vector3::get_one());
-        PGameNoteController_NoteInvScale          = Vector3::op_Multiply(1.0f / l_NoteScale, Vector3::get_one());
+        PGameNoteController_NoteScale             = (       l_NoteScale) * Vector3::get_one();
+        PGameNoteController_NoteInvScale          = (1.0f / l_NoteScale) * Vector3::get_one();
 
         if (p_OnSceneSwitch)
             PGameNoteController_TempEnabled = false;
@@ -64,8 +65,8 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
         p_Scale = FilterScale(p_Scale);
 
         PGameNoteController_TempEnabled           = p_Enabled;
-        PGameNoteController_TempNoteScale         = Vector3::op_Multiply(       p_Scale, Vector3::get_one());
-        PGameNoteController_TempNoteInvScale      = Vector3::op_Multiply(1.0f / p_Scale, Vector3::get_one());
+        PGameNoteController_TempNoteScale         = (       p_Scale) * Vector3::get_one();
+        PGameNoteController_TempNoteInvScale      = (1.0f / p_Scale) * Vector3::get_one();
     }
 
     ////////////////////////////////////////////////////////////////////////////

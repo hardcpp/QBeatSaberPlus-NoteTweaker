@@ -3,6 +3,7 @@
 #include "Logger.hpp"
 
 #include <CP_SDK/Unity/Extensions/ColorU.hpp>
+#include <CP_SDK/Unity/Operators.hpp>
 #include <CP_SDK/Utils/MonoPtr.hpp>
 #include <CP_SDK/ChatPlexSDK.hpp>
 #include <CP_SDK_BS/Game/LevelData.hpp>
@@ -112,8 +113,8 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
 
     void PColorNoteVisuals::SetArrowScaleFromConfig(std::shared_ptr<NTConfig::_Profile>& p_Profile)
     {
-        PColorNoteVisuals_ArrowScale        = Vector3::op_Multiply((NTConfig::Instance()->Enabled ? p_Profile->ArrowsScale : 1.0f), Vector3::get_one());
-        PColorNoteVisuals_ArrowGlowScale    = Vector3::op_Multiply((NTConfig::Instance()->Enabled ? p_Profile->ArrowsScale : 1.0f), Vector3(0.6f, 0.3f, 0.6f));
+        PColorNoteVisuals_ArrowScale        = (NTConfig::Instance()->Enabled ? p_Profile->ArrowsScale : 1.0f) * Vector3::get_one();
+        PColorNoteVisuals_ArrowGlowScale    = (NTConfig::Instance()->Enabled ? p_Profile->ArrowsScale : 1.0f) * Vector3(0.6f, 0.3f, 0.6f);
     }
     void PColorNoteVisuals::SetArrowColorsFromConfig(std::shared_ptr<NTConfig::_Profile>& p_Profile)
     {
@@ -125,9 +126,9 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
 
     void PColorNoteVisuals::SetDotScaleFromConfig(std::shared_ptr<NTConfig::_Profile>& p_Profile)
     {
-        PColorNoteVisuals_CircleScale           = Vector3::op_Multiply((NTConfig::Instance()->Enabled ? p_Profile->DotsScale              : 1.0f), Vector3(0.5f, 0.5f, 0.5f));
-        PColorNoteVisuals_BurstCircleScale      = Vector3::op_Multiply((NTConfig::Instance()->Enabled ? p_Profile->BurstNotesDotsScale    : 1.0f), Vector3(0.1f, 0.1f, 0.1f));
-        PColorNoteVisuals_PrecisionCircleScale  = Vector3::op_Multiply((NTConfig::Instance()->Enabled ? p_Profile->NotesPrecisonDotsScale : 1.0f), Vector3(0.5f, 0.5f, 0.5f));
+        PColorNoteVisuals_CircleScale           = (NTConfig::Instance()->Enabled ? p_Profile->DotsScale              : 1.0f) * Vector3(0.5f, 0.5f, 0.5f);
+        PColorNoteVisuals_BurstCircleScale      = (NTConfig::Instance()->Enabled ? p_Profile->BurstNotesDotsScale    : 1.0f) * Vector3(0.1f, 0.1f, 0.1f);
+        PColorNoteVisuals_PrecisionCircleScale  = (NTConfig::Instance()->Enabled ? p_Profile->NotesPrecisonDotsScale : 1.0f) * Vector3(0.5f, 0.5f, 0.5f);
     }
     void PColorNoteVisuals::SetDotColorsFromConfig(std::shared_ptr<NTConfig::_Profile>& p_Profile)
     {

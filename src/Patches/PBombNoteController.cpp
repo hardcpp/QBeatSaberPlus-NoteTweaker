@@ -4,6 +4,7 @@
 
 #include <vector>
 
+#include <CP_SDK/Unity/Operators.hpp>
 #include <CP_SDK/Utils/MonoPtr.hpp>
 #include <CP_SDK/ChatPlexSDK.hpp>
 #include <CP_SDK_BS/Game/LevelData.hpp>
@@ -73,7 +74,7 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
 
         PBombNoteController_Enabled      = IsScaleAllowed() ? NTConfig::Instance()->Enabled : false;
         PBombNoteController_Color        = (PBombNoteController_Enabled && l_Profile->BombsOverrideColor) ? l_Profile->BombsColor : Color(0.251f, 0.251f, 0.251f, 1.000f);
-        PBombNoteController_Scale        = Vector3::op_Multiply(l_BombScale, Vector3::get_one());
+        PBombNoteController_Scale        = l_BombScale * Vector3::get_one();
         PBombNoteController_InvScale     =  1.0f / l_BombScale;
 
         if (p_OnSceneSwitch)
@@ -92,7 +93,7 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
         p_Scale = FilterScale(p_Scale);
 
         PBombNoteController_TempEnabled     = p_Enabled;
-        PBombNoteController_TempScale       = Vector3::op_Multiply(p_Scale, Vector3::get_one());
+        PBombNoteController_TempScale       = p_Scale * Vector3::get_one();
         PBombNoteController_TempInvScale    = 1.0f / (p_Scale);
     }
 
