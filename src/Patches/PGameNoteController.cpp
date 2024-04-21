@@ -47,8 +47,8 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
         auto  l_NoteScale         = FilterScale(NTConfig::Instance()->Enabled ? l_Profile->NotesScale : 1.0f);
 
         PGameNoteController_Enabled               = IsScaleAllowed() ? NTConfig::Instance()->Enabled : false;
-        PGameNoteController_NoteScale             = (       l_NoteScale) * Vector3::get_one();
-        PGameNoteController_NoteInvScale          = (1.0f / l_NoteScale) * Vector3::get_one();
+        PGameNoteController_NoteScale             = Vector3::op_Multiply(       l_NoteScale, Vector3::get_one());
+        PGameNoteController_NoteInvScale          = Vector3::op_Multiply(1.0f / l_NoteScale, Vector3::get_one());
 
         if (p_OnSceneSwitch)
             PGameNoteController_TempEnabled = false;
@@ -64,8 +64,8 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
         p_Scale = FilterScale(p_Scale);
 
         PGameNoteController_TempEnabled           = p_Enabled;
-        PGameNoteController_TempNoteScale         =         (p_Scale) * Vector3::get_one();
-        PGameNoteController_TempNoteInvScale      = (1.0f / (p_Scale))* Vector3::get_one();
+        PGameNoteController_TempNoteScale         = Vector3::op_Multiply(       p_Scale, Vector3::get_one());
+        PGameNoteController_TempNoteInvScale      = Vector3::op_Multiply(1.0f / p_Scale, Vector3::get_one());
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -77,10 +77,10 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
         auto& l_LevelData = CP_SDK_BS::Game::Logic::LevelData();
         if (l_LevelData)
         {
-            auto l_GameplayModifiers = l_LevelData->Data ? l_LevelData->Data->gameplayModifiers : nullptr;
+            auto l_GameplayModifiers = l_LevelData->Data ? l_LevelData->Data->___gameplayModifiers : nullptr;
             if (l_GameplayModifiers)
             {
-                if (l_GameplayModifiers->proMode || l_GameplayModifiers->smallCubes || l_GameplayModifiers->strictAngles)
+                if (l_GameplayModifiers->____proMode || l_GameplayModifiers->____smallCubes || l_GameplayModifiers->____strictAngles)
                     return false;
             }
         }
@@ -114,10 +114,10 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
 
         auto l_BoxScale = PGameNoteController_TempEnabled ? PGameNoteController_TempNoteInvScale : PGameNoteController_NoteInvScale;
 
-        for (auto l_Current : __Instance->bigCuttableBySaberList)
+        for (auto l_Current : __Instance->____bigCuttableBySaberList)
             l_Current->get_transform()->set_localScale(l_BoxScale);
 
-        for (auto l_Current : __Instance->smallCuttableBySaberList)
+        for (auto l_Current : __Instance->____smallCuttableBySaberList)
             l_Current->get_transform()->set_localScale(l_BoxScale);
     }
 

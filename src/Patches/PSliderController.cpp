@@ -43,7 +43,7 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
         SliderController_Init(__Instance, __a, __b, __c, __d, __e, __f, __g, __h, __i, __j, __k);
 
         if (PSliderController_Enabled)
-            __Instance->initColor = ColorU::WithAlpha(__Instance->initColor, PSliderController_Opacity);
+            __Instance->____initColor = ColorU::WithAlpha(__Instance->____initColor, PSliderController_Opacity);
     }
 
 }   ///< namespace QBeatSaberPlus_NoteTweaker::Patches
