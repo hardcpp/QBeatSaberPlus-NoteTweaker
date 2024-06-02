@@ -5,7 +5,7 @@
   "info": {
     "name": "QBeatSaberPlus-NoteTweaker",
     "id": "qbeatsaberplus-notetweaker",
-    "version": "6.2.1",
+    "version": "6.3.0",
     "url": "https://github.com/hardcpp/QBeatSaberPlus-NoteTweaker",
     "additionalData": {
       "overrideSoName": "libqbeatsaberplus-notetweaker.so",
@@ -92,7 +92,7 @@
     },
     {
       "id": "chatplex-sdk-bs",
-      "versionRange": "^6.2.0",
+      "versionRange": "^6.3.0",
       "additionalData": {
         "private": true
       }
