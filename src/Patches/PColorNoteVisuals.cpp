@@ -3,6 +3,7 @@
 #include "Logger.hpp"
 
 #include <CP_SDK/Unity/Extensions/ColorU.hpp>
+#include <CP_SDK/Unity/Operators.hpp>
 #include <CP_SDK/Utils/MonoPtr.hpp>
 #include <CP_SDK/ChatPlexSDK.hpp>
 #include <CP_SDK_BS/Game/LevelData.hpp>
@@ -206,10 +207,10 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
             auto l_NoteArrowGlowsIt                                 = 0;
             auto l_NoteArrowGlowsMaterialPropertyBlockControllersIt = 0;
 
-            for (auto l_CurrentBlock : __Instance->materialPropertyBlockControllers)
+            for (auto l_CurrentBlock : __Instance->____materialPropertyBlockControllers)
             {
-                if (!l_CurrentBlock->materialPropertyBlock)
-                    l_CurrentBlock->materialPropertyBlock = MaterialPropertyBlock::New_ctor();
+                if (!l_CurrentBlock->____materialPropertyBlock)
+                    l_CurrentBlock->____materialPropertyBlock = MaterialPropertyBlock::New_ctor();
 
                 l_Cache->materialPropertyBlockControllers[l_MaterialPropertyBlockControllersIt++] = l_CurrentBlock;
 
@@ -217,7 +218,7 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
                     Logger::Instance->Error(u"[Patches][ColorNoteVisuals_HandleNoteControllerDidInit] Limit reached for l_MaterialPropertyBlockControllersIt");
             }
 
-            for (auto l_CurrentArrow : __Instance->arrowMeshRenderers)
+            for (auto l_CurrentArrow : __Instance->____arrowMeshRenderers)
             {
                 l_Cache->noteArrows[l_NoteArrowsIt++] = l_CurrentArrow->get_transform();
                 if (l_NoteArrowsIt >= PColorNoteVisualsCache_MaxSubArray)
@@ -229,18 +230,18 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
                     PColorNoteVisuals_ComponentsCache->Clear();
 
                     l_Cache->noteArrowGlows[l_NoteArrowGlowsIt++] = l_Glow;
-                    l_Glow->GetComponents(reinterpret_cast<System::Type*>(csTypeOf(MaterialPropertyBlockController*)), PColorNoteVisuals_ComponentsCache.Ptr());
+                    l_Glow->GetComponentsForListInternal(reinterpret_cast<System::Type*>(csTypeOf(MaterialPropertyBlockController*).convert()), PColorNoteVisuals_ComponentsCache.Ptr());
 
                     if (l_NoteArrowGlowsIt >= PColorNoteVisualsCache_MaxSubArray)
                         Logger::Instance->Error(u"[Patches][ColorNoteVisuals_HandleNoteControllerDidInit] Limit reached for l_NoteArrowGlowsIt");
 
                     auto l_Count = PColorNoteVisuals_ComponentsCache->get_Count();
-                    auto l_Items = PColorNoteVisuals_ComponentsCache->items->values;
+                    auto l_Items = PColorNoteVisuals_ComponentsCache->____items->_values;
                     for (auto l_I = 0; l_I < l_Count; ++l_I)
                     {
                         auto l_CurrentBlock = reinterpret_cast<MaterialPropertyBlockController*>(l_Items[l_I]);
-                        if (!l_CurrentBlock->materialPropertyBlock)
-                            l_CurrentBlock->materialPropertyBlock = MaterialPropertyBlock::New_ctor();
+                        if (!l_CurrentBlock->____materialPropertyBlock)
+                            l_CurrentBlock->____materialPropertyBlock = MaterialPropertyBlock::New_ctor();
 
                         l_Cache->noteArrowGlowsMaterialPropertyBlockControllers[l_NoteArrowGlowsMaterialPropertyBlockControllersIt++] = l_CurrentBlock;
 
@@ -259,9 +260,9 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
 
-        auto l_NoteData         = __Instance->noteController->get_noteData();
-        auto l_ColorType        = l_NoteData->colorType;
-        auto l_CutDirection     = l_NoteData->cutDirection;
+        auto l_NoteData         = __Instance->____noteController->get_noteData();
+        auto l_ColorType        = l_NoteData->get_colorType();
+        auto l_CutDirection     = l_NoteData->get_cutDirection();
         auto l_OverrideColor    = l_ColorType == ColorType::ColorA ? PColorNoteVisuals_LeftBlockColor : PColorNoteVisuals_RightBlockColor;
 
         if (PColorNoteVisuals_BlockColorsEnabled)
@@ -269,7 +270,7 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
             for (auto l_Current : l_Cache->materialPropertyBlockControllers)
             {
                 if (!l_Current) break;
-                l_Current->materialPropertyBlock->SetColor(PColorNoteVisuals_ColorID, l_OverrideColor);
+                l_Current->____materialPropertyBlock->SetColor(PColorNoteVisuals_ColorID, l_OverrideColor);
                 l_Current->ApplyChanges();
             }
 
@@ -279,7 +280,7 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
                 for (auto l_Current : l_Cache->noteArrowGlowsMaterialPropertyBlockControllers)
                 {
                     if (!l_Current) break;
-                    l_Current->materialPropertyBlock->SetColor(PColorNoteVisuals_ColorID, l_NoteArrowGlowColor);
+                    l_Current->____materialPropertyBlock->SetColor(PColorNoteVisuals_ColorID, l_NoteArrowGlowColor);
                     l_Current->ApplyChanges();
                 }
             }
@@ -291,7 +292,7 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
         if (!PColorNoteVisuals_Enabled)
             return;
 
-        auto l_BaseColor    = __Instance->colorManager->ColorForType(l_ColorType);
+        auto l_BaseColor    = __Instance->____colorManager->ColorForType(l_ColorType);
         auto l_ArrowColor   = ColorU::WithAlpha(PColorNoteVisuals_OverrideArrowColors ? (l_ColorType == ColorType::ColorB ? PColorNoteVisuals_RightArrowColor  : PColorNoteVisuals_LeftArrowColor) : l_BaseColor, PColorNoteVisuals_ArrowAlpha);
 
         if (PColorNoteVisuals_BlockColorsEnabled)
@@ -310,7 +311,7 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
         for (auto l_Current : l_Cache->noteArrowGlowsMaterialPropertyBlockControllers)
         {
             if (!l_Current) break;
-            l_Current->materialPropertyBlock->SetColor(PColorNoteVisuals_ColorID, l_ArrowColor);
+            l_Current->____materialPropertyBlock->SetColor(PColorNoteVisuals_ColorID, l_ArrowColor);
             l_Current->ApplyChanges();
         }
 
@@ -319,7 +320,7 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
         auto l_DotEnabled   = l_CutDirection == NoteCutDirection::Any ? PColorNoteVisuals_CircleEnabled : (PColorNoteVisuals_CircleEnabled && PColorNoteVisuals_CircleForceEnabled);
         auto l_DotColor     = ColorU::WithAlpha(PColorNoteVisuals_OverrideDotColors ? (l_ColorType == ColorType::ColorB ? PColorNoteVisuals_RightCircleColor : PColorNoteVisuals_LeftCircleColor) : l_BaseColor, PColorNoteVisuals_DotAlpha);
 
-        for (auto l_CurrentRenderer : __Instance->circleMeshRenderers)
+        for (auto l_CurrentRenderer : __Instance->____circleMeshRenderers)
         {
             l_CurrentRenderer->set_enabled                    (l_DotEnabled);
             l_CurrentRenderer->get_transform()->set_localScale(l_CircleScale);

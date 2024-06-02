@@ -2,6 +2,7 @@
 #include "NTConfig.hpp"
 #include "Logger.hpp"
 
+#include <CP_SDK/Unity/Operators.hpp>
 #include <CP_SDK/Utils/MonoPtr.hpp>
 #include <CP_SDK_BS/Game/LevelData.hpp>
 #include <CP_SDK_BS/Game/Logic.hpp>
@@ -64,8 +65,8 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
         p_Scale = FilterScale(p_Scale);
 
         PBurstSliderGameNoteController_TempEnabled           = p_Enabled;
-        PBurstSliderGameNoteController_TempNoteScale         =         (p_Scale) * Vector3::get_one();
-        PBurstSliderGameNoteController_TempNoteInvScale      = (1.0f / (p_Scale))* Vector3::get_one();
+        PBurstSliderGameNoteController_TempNoteScale         = (       p_Scale) * Vector3::get_one();
+        PBurstSliderGameNoteController_TempNoteInvScale      = (1.0f / p_Scale) * Vector3::get_one();
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -77,10 +78,10 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
         auto& l_LevelData = CP_SDK_BS::Game::Logic::LevelData();
         if (l_LevelData)
         {
-            auto l_GameplayModifiers = l_LevelData->Data ? l_LevelData->Data->gameplayModifiers : nullptr;
+            auto l_GameplayModifiers = l_LevelData->Data ? l_LevelData->Data->___gameplayModifiers : nullptr;
             if (l_GameplayModifiers)
             {
-                if (l_GameplayModifiers->proMode || l_GameplayModifiers->smallCubes || l_GameplayModifiers->strictAngles)
+                if (l_GameplayModifiers->____proMode || l_GameplayModifiers->____smallCubes || l_GameplayModifiers->____strictAngles)
                     return false;
             }
         }
@@ -114,10 +115,10 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
 
         auto l_BoxScale = PBurstSliderGameNoteController_TempEnabled ? PBurstSliderGameNoteController_TempNoteInvScale : PBurstSliderGameNoteController_NoteInvScale;
 
-        for (auto l_Current : __Instance->bigCuttableBySaberList)
+        for (auto l_Current : __Instance->____bigCuttableBySaberList)
             l_Current->get_transform()->set_localScale(l_BoxScale);
 
-        for (auto l_Current : __Instance->smallCuttableBySaberList)
+        for (auto l_Current : __Instance->____smallCuttableBySaberList)
             l_Current->get_transform()->set_localScale(l_BoxScale);
     }
 

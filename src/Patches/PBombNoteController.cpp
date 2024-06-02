@@ -4,6 +4,7 @@
 
 #include <vector>
 
+#include <CP_SDK/Unity/Operators.hpp>
 #include <CP_SDK/Utils/MonoPtr.hpp>
 #include <CP_SDK/ChatPlexSDK.hpp>
 #include <CP_SDK_BS/Game/LevelData.hpp>
@@ -73,7 +74,7 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
 
         PBombNoteController_Enabled      = IsScaleAllowed() ? NTConfig::Instance()->Enabled : false;
         PBombNoteController_Color        = (PBombNoteController_Enabled && l_Profile->BombsOverrideColor) ? l_Profile->BombsColor : Color(0.251f, 0.251f, 0.251f, 1.000f);
-        PBombNoteController_Scale        = (       l_BombScale) * Vector3::get_one();
+        PBombNoteController_Scale        = l_BombScale * Vector3::get_one();
         PBombNoteController_InvScale     =  1.0f / l_BombScale;
 
         if (p_OnSceneSwitch)
@@ -92,7 +93,7 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
         p_Scale = FilterScale(p_Scale);
 
         PBombNoteController_TempEnabled     = p_Enabled;
-        PBombNoteController_TempScale       =        (p_Scale) * Vector3::get_one();
+        PBombNoteController_TempScale       = p_Scale * Vector3::get_one();
         PBombNoteController_TempInvScale    = 1.0f / (p_Scale);
     }
 
@@ -105,10 +106,10 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
         auto& l_LevelData = CP_SDK_BS::Game::Logic::LevelData();
         if (l_LevelData)
         {
-            auto l_GameplayModifiers = l_LevelData->Data ? l_LevelData->Data->gameplayModifiers : nullptr;
+            auto l_GameplayModifiers = l_LevelData->Data ? l_LevelData->Data->___gameplayModifiers : nullptr;
             if (l_GameplayModifiers)
             {
-                if (l_GameplayModifiers->proMode || l_GameplayModifiers->smallCubes || l_GameplayModifiers->strictAngles)
+                if (l_GameplayModifiers->____proMode || l_GameplayModifiers->____smallCubes || l_GameplayModifiers->____strictAngles)
                     return false;
             }
         }
@@ -167,16 +168,16 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
             PBombNoteController_Cache.push_back({
                 __Instance,
                 __Instance->GetComponentInChildren<MaterialPropertyBlockController*>(),
-                __Instance->cuttableBySaber->GetComponent<SphereCollider*>(),
+                __Instance->____cuttableBySaber->GetComponent<SphereCollider*>(),
                 __Instance->get_transform()
             });
             l_Cache = &PBombNoteController_Cache.back();
 
-            if (!l_Cache->materialPropertyBlockController->materialPropertyBlock)
-                l_Cache->materialPropertyBlockController->materialPropertyBlock = MaterialPropertyBlock::New_ctor();
+            if (!l_Cache->materialPropertyBlockController->____materialPropertyBlock)
+                l_Cache->materialPropertyBlockController->____materialPropertyBlock = MaterialPropertyBlock::New_ctor();
         }
 
-        l_Cache->materialPropertyBlockController->materialPropertyBlock->SetColor(PBombNoteController_ColorID, PBombNoteController_Color);
+        l_Cache->materialPropertyBlockController->____materialPropertyBlock->SetColor(PBombNoteController_ColorID, PBombNoteController_Color);
         l_Cache->materialPropertyBlockController->ApplyChanges();
         l_Cache->sphereCollider->set_radius(0.18f * (PBombNoteController_TempEnabled ? PBombNoteController_TempInvScale : PBombNoteController_InvScale));
         l_Cache->transform->set_localScale(PBombNoteController_TempEnabled ? PBombNoteController_TempScale : PBombNoteController_Scale);

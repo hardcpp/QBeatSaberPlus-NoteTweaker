@@ -529,7 +529,7 @@ namespace QBeatSaberPlus_NoteTweaker::UI {
         try
         {
             StringW l_FileName = std::to_string(CP_SDK::Misc::Time::UnixTimeNow()) + "_" + CP_SDK::Utils::U16StrToStr(l_Profile->Name) + ".bspnt";
-            l_FileName =  NoteTweaker::Instance()->ExportFolder() + u"/" + Il2CppString::Join(u"", l_FileName->Split(System::IO::Path::GetInvalidFileNameChars()));
+            l_FileName =  NoteTweaker::Instance()->ExportFolder() + u"/" + System::String::Join(u"", l_FileName->Split(System::IO::Path::GetInvalidPathChars()));
 
             l_Stream.open(l_FileName.operator std::__ndk1::string(), std::ios::trunc);
 
@@ -546,7 +546,7 @@ namespace QBeatSaberPlus_NoteTweaker::UI {
 
             l_Stream.close();
 
-            ShowMessageModal("Profile exported in\n" + NoteTweaker::Instance()->ExportFolder());
+            ShowMessageModal(u"Profile exported in\n" + NoteTweaker::Instance()->ExportFolder());
         }
         catch (const std::exception& l_Exception)
         {

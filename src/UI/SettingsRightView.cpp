@@ -3,6 +3,7 @@
 #include "Logger.hpp"
 
 #include <CP_SDK/Unity/Extensions/ColorU.hpp>
+#include <CP_SDK/Unity/Operators.hpp>
 
 #include <GlobalNamespace/BeatmapObjectsInstaller.hpp>
 #include <GlobalNamespace/BurstSliderGameNoteController.hpp>
@@ -87,31 +88,31 @@ namespace QBeatSaberPlus_NoteTweaker::UI {
 
         GameObject::DontDestroyOnLoad(m_Parent.Ptr());
 
-        auto l_MenuTransitionsHelper                  = Resources::FindObjectsOfTypeAll<MenuTransitionsHelper*>().FirstOrDefault();
-        auto l_StandardLevelScenesTransitionSetupData = l_MenuTransitionsHelper->standardLevelScenesTransitionSetupData;
-        auto l_StandardGameplaySceneInfo              = l_StandardLevelScenesTransitionSetupData->standardGameplaySceneInfo;
-        auto l_GameCoreSceneInfo                      = l_StandardLevelScenesTransitionSetupData->gameCoreSceneInfo;
+        auto l_MenuTransitionsHelper                  = Resources::FindObjectsOfTypeAll<MenuTransitionsHelper*>()->FirstOrDefault();
+        auto l_StandardLevelScenesTransitionSetupData = l_MenuTransitionsHelper->____standardLevelScenesTransitionSetupData;
+        auto l_StandardGameplaySceneInfo              = l_StandardLevelScenesTransitionSetupData->____standardGameplaySceneInfo;
+        auto l_GameCoreSceneInfo                      = l_StandardLevelScenesTransitionSetupData->____gameCoreSceneInfo;
 
         using t_Delegate1 = System::Action_1<AsyncOperation*>*;
-        SceneManagement::SceneManager::LoadSceneAsync(l_GameCoreSceneInfo->sceneName, SceneManagement::LoadSceneMode::Additive)->add_completed(custom_types::MakeDelegate<t_Delegate1>(std::function([=, this](AsyncOperation*)
+        SceneManagement::SceneManager::LoadSceneAsync(l_GameCoreSceneInfo->____sceneName, SceneManagement::LoadSceneMode::Additive)->add_completed(custom_types::MakeDelegate<t_Delegate1>(std::function([=, this](AsyncOperation*)
         {
-            SceneManagement::SceneManager::LoadSceneAsync(l_StandardGameplaySceneInfo->sceneName, SceneManagement::LoadSceneMode::Additive)->add_completed(custom_types::MakeDelegate<t_Delegate1>(std::function([=, this](AsyncOperation*)
+            SceneManagement::SceneManager::LoadSceneAsync(l_StandardGameplaySceneInfo->____sceneName, SceneManagement::LoadSceneMode::Additive)->add_completed(custom_types::MakeDelegate<t_Delegate1>(std::function([=, this](AsyncOperation*)
             {
-                auto l_BeatmapObjectsInstaller   = Resources::FindObjectsOfTypeAll<BeatmapObjectsInstaller*>().FirstOrDefault();
-                auto l_OriginalNotePrefab        = l_BeatmapObjectsInstaller->normalBasicNotePrefab;
+                auto l_BeatmapObjectsInstaller   = Resources::FindObjectsOfTypeAll<BeatmapObjectsInstaller*>()->FirstOrDefault();
+                auto l_OriginalNotePrefab        = l_BeatmapObjectsInstaller->____normalBasicNotePrefab;
 
                 m_NoteTemplate = GameObject::Instantiate(l_OriginalNotePrefab->get_transform()->GetChild(0)->get_gameObject());
                 m_NoteTemplate->get_gameObject()->SetActive(false);
 
                 GameObject::DontDestroyOnLoad(m_NoteTemplate.Ptr());
 
-                auto l_OriginalBombPrefab = l_BeatmapObjectsInstaller->bombNotePrefab;
+                auto l_OriginalBombPrefab = l_BeatmapObjectsInstaller->____bombNotePrefab;
                 m_BombTemplate = GameObject::Instantiate(l_OriginalBombPrefab->get_transform()->GetChild(0)->get_gameObject());
                 m_BombTemplate->get_gameObject()->SetActive(false);
 
                 GameObject::DontDestroyOnLoad(m_BombTemplate.Ptr());
 
-                auto l_OriginalBurstSliderPrefab = l_BeatmapObjectsInstaller->burstSliderNotePrefab;
+                auto l_OriginalBurstSliderPrefab = l_BeatmapObjectsInstaller->____burstSliderNotePrefab;
                 m_BurstSliderTemplate = GameObject::Instantiate(l_OriginalBurstSliderPrefab->get_transform()->GetChild(0)->get_gameObject());
                 m_BurstSliderTemplate->get_gameObject()->SetActive(false);
 
@@ -127,8 +128,8 @@ namespace QBeatSaberPlus_NoteTweaker::UI {
                     Logger::Instance->Error(ex);
                 }
 
-                SceneManagement::SceneManager::UnloadSceneAsync(l_StandardGameplaySceneInfo->sceneName);
-                SceneManagement::SceneManager::UnloadSceneAsync(l_GameCoreSceneInfo->sceneName);
+                SceneManagement::SceneManager::UnloadSceneAsync(SceneManagement::SceneManager::GetSceneByName(l_StandardGameplaySceneInfo->____sceneName));
+                SceneManagement::SceneManager::UnloadSceneAsync(SceneManagement::SceneManager::GetSceneByName(l_GameCoreSceneInfo->____sceneName));
             })));
         })));
     }
@@ -206,8 +207,8 @@ namespace QBeatSaberPlus_NoteTweaker::UI {
         m_CustomPreviewDL->get_transform()->set_localScale(Vector3::get_one() * l_Profile->NotesScale);
         m_CustomPreviewDR->get_transform()->set_localScale(Vector3::get_one() * l_Profile->NotesScale);
 
-        auto l_PlayerData    = Resources::FindObjectsOfTypeAll<PlayerDataModel*>().First()->playerData;
-        auto l_ColorScheme   = l_PlayerData->colorSchemesSettings->overrideDefaultColors ? l_PlayerData->colorSchemesSettings->GetSelectedColorScheme() : nullptr;
+        auto l_PlayerData    = Resources::FindObjectsOfTypeAll<PlayerDataModel*>()->First()->____playerData;
+        auto l_ColorScheme   = l_PlayerData->get_colorSchemesSettings()->overrideDefaultColors ? l_PlayerData->get_colorSchemesSettings()->GetSelectedColorScheme() : nullptr;
         auto l_LeftColor     = l_ColorScheme != nullptr ? l_ColorScheme->saberAColor : Color(0.658823549747467f, 0.125490203499794f,  0.125490203499794f, 1.0f);
         auto l_RightColor    = l_ColorScheme != nullptr ? l_ColorScheme->saberBColor : Color(0.125490203499794f, 0.3921568691730499f, 0.658823549747467f, 1.0f);
 
@@ -244,10 +245,10 @@ namespace QBeatSaberPlus_NoteTweaker::UI {
     void SettingsRightView::CreatePreview(GameObject* p_NoteTemplate, GameObject* p_BombTemplate, GameObject* m_BurstFillTemplate)
     {
         auto& l_Profile       = NTConfig::Instance()->GetActiveProfile();
-        auto  l_PlayerData    = Resources::FindObjectsOfTypeAll<PlayerDataModel*>().First()->playerData;
-        auto  l_ColorScheme   = l_PlayerData->colorSchemesSettings->overrideDefaultColors ? l_PlayerData->colorSchemesSettings->GetSelectedColorScheme() : nullptr;
-        auto  l_LeftColor     = l_ColorScheme != nullptr ? l_ColorScheme->saberAColor : Color(0.658823549747467f, 0.125490203499794f, 0.125490203499794f, 1.0f);
-        auto  l_RightColor    = l_ColorScheme != nullptr ? l_ColorScheme->saberBColor : Color(0.125490203499794f, 0.3921568691730499f, 0.658823549747467f, 1.0f);
+        auto  l_PlayerData    = Resources::FindObjectsOfTypeAll<PlayerDataModel*>()->First()->get_playerData();
+        auto  l_ColorScheme   = l_PlayerData->get_colorSchemesSettings()->___overrideDefaultColors ? l_PlayerData->get_colorSchemesSettings()->GetSelectedColorScheme() : nullptr;
+        auto  l_LeftColor     = l_ColorScheme != nullptr ? l_ColorScheme->get_saberAColor() : Color(0.658823549747467f, 0.125490203499794f, 0.125490203499794f, 1.0f);
+        auto  l_RightColor    = l_ColorScheme != nullptr ? l_ColorScheme->get_saberBColor() : Color(0.125490203499794f, 0.3921568691730499f, 0.658823549747467f, 1.0f);
 
         /// ==============
 
@@ -432,13 +433,13 @@ namespace QBeatSaberPlus_NoteTweaker::UI {
 
             for (auto l_PropertyBlockController : p_Object->GetComponents<MaterialPropertyBlockController*>())
             {
-                if (!l_PropertyBlockController->materialPropertyBlock)
-                    l_PropertyBlockController->materialPropertyBlock = MaterialPropertyBlock::New_ctor();
+                if (!l_PropertyBlockController->____materialPropertyBlock)
+                    l_PropertyBlockController->____materialPropertyBlock = MaterialPropertyBlock::New_ctor();
 
-                l_PropertyBlockController->materialPropertyBlock->SetColor(Shader::PropertyToID("_Color"),           ColorU::WithAlpha(p_Color, 1.0f));
-                l_PropertyBlockController->materialPropertyBlock->SetFloat(Shader::PropertyToID("_EnableRimDim"),    0.0f);
-                l_PropertyBlockController->materialPropertyBlock->SetFloat(Shader::PropertyToID("_EnableFog"),       0.0f);
-                l_PropertyBlockController->materialPropertyBlock->SetFloat(Shader::PropertyToID("_RimDarkenning"),   0.0f);
+                l_PropertyBlockController->____materialPropertyBlock->SetColor(Shader::PropertyToID("_Color"),           ColorU::WithAlpha(p_Color, 1.0f));
+                l_PropertyBlockController->____materialPropertyBlock->SetFloat(Shader::PropertyToID("_EnableRimDim"),    0.0f);
+                l_PropertyBlockController->____materialPropertyBlock->SetFloat(Shader::PropertyToID("_EnableFog"),       0.0f);
+                l_PropertyBlockController->____materialPropertyBlock->SetFloat(Shader::PropertyToID("_RimDarkenning"),   0.0f);
 
                 l_PropertyBlockController->ApplyChanges();
             }
@@ -460,14 +461,14 @@ namespace QBeatSaberPlus_NoteTweaker::UI {
         auto l_Glow = p_Note->get_transform()->Find("NoteArrowGlow");
         if (l_Glow)
         {
-            l_Glow->get_transform()->set_localScale(Vector3(0.6f, 0.3f, 0.6f) * p_Scale);
+            l_Glow->get_transform()->set_localScale(Vector3(0.6f * p_Scale, 0.3f * p_Scale, 0.6f * p_Scale));
 
             for (auto l_PropertyBlockController : l_Glow->GetComponents<MaterialPropertyBlockController*>())
             {
-                if (!l_PropertyBlockController->materialPropertyBlock)
-                    l_PropertyBlockController->materialPropertyBlock = MaterialPropertyBlock::New_ctor();
+                if (!l_PropertyBlockController->____materialPropertyBlock)
+                    l_PropertyBlockController->____materialPropertyBlock = MaterialPropertyBlock::New_ctor();
 
-                l_PropertyBlockController->materialPropertyBlock->SetColor(Shader::PropertyToID("_Color"), p_Color);
+                l_PropertyBlockController->____materialPropertyBlock->SetColor(Shader::PropertyToID("_Color"), p_Color);
                 l_PropertyBlockController->ApplyChanges();
             }
 
@@ -485,14 +486,14 @@ namespace QBeatSaberPlus_NoteTweaker::UI {
         auto l_Circle        = p_Note->get_transform()->Find("Circle");
         if (l_CircleGlow)
         {
-            l_CircleGlow->get_transform()->set_localScale(Vector3(0.5f, 0.5f, 0.5f) * p_Scale);
+            l_CircleGlow->get_transform()->set_localScale(Vector3(0.5f * p_Scale, 0.5f * p_Scale, 0.5f * p_Scale));
 
             for (auto l_PropertyBlockController : l_CircleGlow->GetComponents<MaterialPropertyBlockController*>())
             {
-                if (!l_PropertyBlockController->materialPropertyBlock)
-                    l_PropertyBlockController->materialPropertyBlock = MaterialPropertyBlock::New_ctor();
+                if (!l_PropertyBlockController->____materialPropertyBlock)
+                    l_PropertyBlockController->____materialPropertyBlock = MaterialPropertyBlock::New_ctor();
 
-                l_PropertyBlockController->materialPropertyBlock->SetColor(Shader::PropertyToID("_Color"), p_Color);
+                l_PropertyBlockController->____materialPropertyBlock->SetColor(Shader::PropertyToID("_Color"), p_Color);
                 l_PropertyBlockController->ApplyChanges();
             }
 
@@ -500,14 +501,14 @@ namespace QBeatSaberPlus_NoteTweaker::UI {
         }
         else if (l_Circle)
         {
-            l_Circle->get_transform()->set_localScale(Vector3(0.1f, 0.1f, 0.1f) * p_Scale);
+            l_Circle->get_transform()->set_localScale(Vector3(0.1f * p_Scale, 0.1f * p_Scale, 0.1f * p_Scale));
 
             for (auto l_PropertyBlockController : l_Circle->GetComponents<MaterialPropertyBlockController*>())
             {
-                if (!l_PropertyBlockController->materialPropertyBlock)
-                    l_PropertyBlockController->materialPropertyBlock = MaterialPropertyBlock::New_ctor();
+                if (!l_PropertyBlockController->____materialPropertyBlock)
+                    l_PropertyBlockController->____materialPropertyBlock = MaterialPropertyBlock::New_ctor();
 
-                l_PropertyBlockController->materialPropertyBlock->SetColor(Shader::PropertyToID("_Color"), p_Color);
+                l_PropertyBlockController->____materialPropertyBlock->SetColor(Shader::PropertyToID("_Color"), p_Color);
                 l_PropertyBlockController->ApplyChanges();
             }
 
