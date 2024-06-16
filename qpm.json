@@ -5,7 +5,7 @@
   "info": {
     "name": "QBeatSaberPlus-NoteTweaker",
     "id": "qbeatsaberplus-notetweaker",
-    "version": "6.3.0",
+    "version": "6.3.1",
     "url": "https://github.com/hardcpp/QBeatSaberPlus-NoteTweaker",
     "additionalData": {
       "overrideSoName": "libqbeatsaberplus-notetweaker.so",
@@ -67,13 +67,6 @@
       "additionalData": {}
     },
     {
-      "id": "songcore",
-      "versionRange": "=1.1.4",
-      "additionalData": {
-        "private": true
-      }
-    },
-    {
       "id": "conditional-dependencies",
       "versionRange": "^0.3.0",
       "additionalData": {
@@ -92,7 +85,7 @@
     },
     {
       "id": "chatplex-sdk-bs",
-      "versionRange": "^6.3.0",
+      "versionRange": "^6.3.1",
       "additionalData": {
         "private": true
       }
