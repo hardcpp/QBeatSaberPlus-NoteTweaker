@@ -1,8 +1,6 @@
 #include "UI/SettingsLeftView.hpp"
 #include "NoteTweaker.hpp"
 
-#include <UnityEngine/Application.hpp>
-
 namespace QBeatSaberPlus_NoteTweaker::UI {
 
     using namespace CP_SDK::XUI;
@@ -61,7 +59,7 @@ namespace QBeatSaberPlus_NoteTweaker::UI {
     void SettingsLeftView::OnDocumentationButton()
     {
         ShowMessageModal(u"URL opened in your web browser.");
-        Application::OpenURL(NoteTweaker::Instance()->DocumentationURL());
+        CP_SDK::ChatPlexSDK::OpenURL(NoteTweaker::Instance()->DocumentationURL());
     }
 
 }   ///< namespace QBeatSaberPlus_NoteTweaker::UI
