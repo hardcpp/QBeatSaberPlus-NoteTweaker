@@ -246,7 +246,7 @@ namespace QBeatSaberPlus_NoteTweaker::UI {
     {
         auto& l_Profile       = NTConfig::Instance()->GetActiveProfile();
         auto  l_PlayerData    = Resources::FindObjectsOfTypeAll<PlayerDataModel*>()->First()->get_playerData();
-        auto  l_ColorScheme   = l_PlayerData->get_colorSchemesSettings()->___overrideDefaultColors ? l_PlayerData->get_colorSchemesSettings()->GetSelectedColorScheme() : nullptr;
+        auto  l_ColorScheme   = l_PlayerData->get_colorSchemesSettings()->____overrideDefaultColors ? l_PlayerData->get_colorSchemesSettings()->GetSelectedColorScheme() : nullptr;
         auto  l_LeftColor     = l_ColorScheme != nullptr ? l_ColorScheme->get_saberAColor() : Color(0.658823549747467f, 0.125490203499794f, 0.125490203499794f, 1.0f);
         auto  l_RightColor    = l_ColorScheme != nullptr ? l_ColorScheme->get_saberBColor() : Color(0.125490203499794f, 0.3921568691730499f, 0.658823549747467f, 1.0f);
 
