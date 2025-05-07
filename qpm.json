@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "0.4.0",
   "sharedDir": "shared",
   "dependenciesDir": "extern",
   "info": {
@@ -35,7 +35,14 @@
         "qpm qmod build",
         "pwsh ./createqmod.ps1 -clean"
       ]
-    }
+    },
+    "ndk": "^27.2.12479018",
+    "qmodIncludeDirs": [
+      "build",
+      "extern/libs"
+    ],
+    "qmodIncludeFiles": [],
+    "qmodOutput": "./QBeatSaberPlus-MenuMusic.qmod"
   },
   "dependencies": [
     {
