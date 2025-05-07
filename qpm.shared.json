@@ -90,7 +90,7 @@
       },
       {
         "id": "chatplex-sdk-bs",
-        "versionRange": "^6.3.2",
+        "versionRange": "^6.4.0",
         "additionalData": {
           "private": true
         }
@@ -101,12 +101,12 @@
     {
       "dependency": {
         "id": "paper2_scotland2",
-        "versionRange": "=4.6.2",
+        "versionRange": "=4.6.3",
         "additionalData": {
-          "soLink": "https://github.com/Fernthedev/paperlog/releases/download/v4.6.2/libpaper2_scotland2.so",
+          "soLink": "https://github.com/Fernthedev/paperlog/releases/download/v4.6.3/libpaper2_scotland2.so",
           "overrideSoName": "libpaper2_scotland2.so",
-          "modLink": "https://github.com/Fernthedev/paperlog/releases/download/v4.6.2/paper2_scotland2.qmod",
-          "branchName": "version/v4_6_2",
+          "modLink": "https://github.com/Fernthedev/paperlog/releases/download/v4.6.3/paper2_scotland2.qmod",
+          "branchName": "version/v4_6_3",
           "compileOptions": {
             "systemIncludes": [
               "shared/utfcpp/source"
@@ -115,7 +115,7 @@
           "cmake": false
         }
       },
-      "version": "4.6.2"
+      "version": "4.6.3"
     },
     {
       "dependency": {
@@ -136,13 +136,17 @@
     {
       "dependency": {
         "id": "chatplex-sdk-bs",
-        "versionRange": "=6.3.2",
+        "versionRange": "=6.4.0",
         "additionalData": {
+          "soLink": "https://github.com/hardcpp/QuestChatPlexSDK-BS/releases/download/v6.4.0/libchatplex-sdk-bs.so",
+          "debugSoLink": "https://github.com/hardcpp/QuestChatPlexSDK-BS/releases/download/v6.4.0/debug_libchatplex-sdk-bs.so",
           "overrideSoName": "libchatplex-sdk-bs.so",
+          "modLink": "https://github.com/hardcpp/QuestChatPlexSDK-BS/releases/download/v6.4.0/ChatPlexSDK-BS.qmod",
+          "branchName": "version/v6_4_0",
           "cmake": true
         }
       },
-      "version": "6.3.2"
+      "version": "6.4.0"
     },
     {
       "dependency": {
