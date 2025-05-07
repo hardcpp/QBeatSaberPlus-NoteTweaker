@@ -14,6 +14,7 @@
 #include <GlobalNamespace/BombNoteController.hpp>
 #include <GlobalNamespace/CuttableBySaber.hpp>
 #include <GlobalNamespace/GameplayModifiers.hpp>
+#include <GlobalNamespace/NoteSpawnData.hpp>
 #include <GlobalNamespace/MaterialPropertyBlockController.hpp>
 #include <UnityEngine/GameObject.hpp>
 #include <UnityEngine/MaterialPropertyBlock.hpp>
@@ -149,10 +150,9 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
         BombNoteController_Init, &BombNoteController::Init,
         void, BombNoteController* __Instance,
 
-        NoteData*               __a, float __b, Vector3 __c, Vector3 __d,
-        Vector3                 __e, float __f, float   __g, float   __h)
+        NoteData* __a, ByRef<NoteSpawnData> __b)
     {
-        BombNoteController_Init(__Instance, __a, __b, __c, __d, __e, __f, __g, __h);
+        BombNoteController_Init(__Instance, __a, __b);
 
         auto l_Cache      = (PBombNoteControllerCache*)nullptr;
         auto l_CacheCount = PBombNoteController_Cache.size();

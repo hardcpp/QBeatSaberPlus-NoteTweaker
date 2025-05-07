@@ -5,7 +5,7 @@
   "info": {
     "name": "QBeatSaberPlus-NoteTweaker",
     "id": "qbeatsaberplus-notetweaker",
-    "version": "6.3.2",
+    "version": "6.4.0",
     "url": "https://github.com/hardcpp/QBeatSaberPlus-NoteTweaker",
     "additionalData": {
       "overrideSoName": "libqbeatsaberplus-notetweaker.so",
@@ -40,22 +40,22 @@
   "dependencies": [
     {
       "id": "beatsaber-hook",
-      "versionRange": "^5.1.9",
+      "versionRange": "^6.4.1",
       "additionalData": {}
     },
     {
       "id": "bs-cordl",
-      "versionRange": "^3700.*",
+      "versionRange": "^4004.0.0",
       "additionalData": {}
     },
     {
       "id": "custom-types",
-      "versionRange": "^0.17.8",
+      "versionRange": "^0.18.2",
       "additionalData": {}
     },
     {
       "id": "scotland2",
-      "versionRange": "^0.1.4",
+      "versionRange": "^0.1.6",
       "additionalData": {
         "includeQmod": false,
         "private": true
@@ -63,7 +63,7 @@
     },
     {
       "id": "libil2cpp",
-      "versionRange": "^0.3.1",
+      "versionRange": "^0.4.0",
       "additionalData": {}
     },
     {
@@ -74,8 +74,8 @@
       }
     },
     {
-      "id": "paper",
-      "versionRange": "^3.6.3",
+      "id": "paper2_scotland2",
+      "versionRange": "^4.6.1",
       "additionalData": {}
     },
     {
@@ -85,7 +85,7 @@
     },
     {
       "id": "chatplex-sdk-bs",
-      "versionRange": "^6.3.2",
+      "versionRange": "^6.4.0",
       "additionalData": {
         "private": true
       }

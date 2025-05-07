@@ -102,11 +102,9 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
         BurstSliderGameNoteController_Init, &BurstSliderGameNoteController::Init,
         void, BurstSliderGameNoteController* __Instance,
 
-        NoteData*               __a, float __b, Vector3 __c, Vector3 __d,
-        Vector3                 __e, float __f, float   __g, float   __h,
-        NoteVisualModifierType  __i, float __j)
+        NoteData* __a, ByRef<NoteSpawnData> __b, NoteVisualModifierType __c, float __d)
     {
-        BurstSliderGameNoteController_Init(__Instance, __a, __b, __c, __d, __e, __f, __g, __h, __i, __j);
+        BurstSliderGameNoteController_Init(__Instance, __a, __b, __c, __d);
 
         if (!PBurstSliderGameNoteController_Enabled && !PBurstSliderGameNoteController_TempEnabled)
             return;

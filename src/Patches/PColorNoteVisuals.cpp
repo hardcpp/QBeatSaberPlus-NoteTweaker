@@ -1,4 +1,5 @@
 #include "Patches/PColorNoteVisuals.hpp"
+#include "CP_SDK/Utils/Il2cpp.hpp"
 #include "NTConfig.hpp"
 #include "Logger.hpp"
 
@@ -23,6 +24,7 @@
 #include <UnityEngine/MeshRenderer.hpp>
 #include <UnityEngine/Shader.hpp>
 #include <UnityEngine/Transform.hpp>
+#include <string>
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wreturn-type-c-linkage"
@@ -51,6 +53,7 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
         Transform*                          noteArrows[PColorNoteVisualsCache_MaxSubArray];
         Transform*                          noteArrowGlows[PColorNoteVisualsCache_MaxSubArray];
         MaterialPropertyBlockController*    noteArrowGlowsMaterialPropertyBlockControllers[PColorNoteVisualsCache_MaxSubArray];
+        MaterialPropertyBlockController*    noteCircleMeshRenderersMaterialPropertyBlockControllers[PColorNoteVisualsCache_MaxSubArray];
     };
 
     ////////////////////////////////////////////////////////////////////////////
@@ -151,7 +154,7 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
             PColorNoteVisuals_ComponentsCache = List_1<Component*>::New_ctor(10);
 
         if (PColorNoteVisuals_ColorID == 0)
-            PColorNoteVisuals_ColorID = Shader::PropertyToID("_SimpleColor");
+            PColorNoteVisuals_ColorID = Shader::PropertyToID("_Color");
 
         if (!PColorNoteVisuals_WasInit)
         {
@@ -179,8 +182,8 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
     {
         ColorNoteVisuals_HandleNoteControllerDidInit(__Instance, __a);
 
-        auto l_Cache      = (PColorNoteVisualsCache*)nullptr;
-        auto l_CacheCount = PColorNoteVisuals_Cache.size();
+        auto l_Cache = (PColorNoteVisualsCache*)nullptr;
+        auto l_CacheCount           = PColorNoteVisuals_Cache.size();
         for (auto l_I = 0; l_I < l_CacheCount; ++l_I)
         {
             l_Cache = &PColorNoteVisuals_Cache[l_I];
@@ -202,10 +205,11 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
             });
             l_Cache = &PColorNoteVisuals_Cache.back();
 
-            auto l_MaterialPropertyBlockControllersIt               = 0;
-            auto l_NoteArrowsIt                                     = 0;
-            auto l_NoteArrowGlowsIt                                 = 0;
-            auto l_NoteArrowGlowsMaterialPropertyBlockControllersIt = 0;
+            auto l_MaterialPropertyBlockControllersIt                       = 0;
+            auto l_NoteArrowsIt                                             = 0;
+            auto l_NoteArrowGlowsIt                                         = 0;
+            auto l_NoteArrowGlowsMaterialPropertyBlockControllersIt         = 0;
+            auto l_NoteCircleMeshRenderersMaterialPropertyBlockControllersIt= 0;
 
             for (auto l_CurrentBlock : __Instance->____materialPropertyBlockControllers)
             {
@@ -251,10 +255,31 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
                 }
             }
 
-            l_Cache->materialPropertyBlockControllers              [l_MaterialPropertyBlockControllersIt++              ] = nullptr;
-            l_Cache->noteArrows                                    [l_NoteArrowsIt++                                    ] = nullptr;
-            l_Cache->noteArrowGlows                                [l_NoteArrowGlowsIt++                                ] = nullptr;
-            l_Cache->noteArrowGlowsMaterialPropertyBlockControllers[l_NoteArrowGlowsMaterialPropertyBlockControllersIt++] = nullptr;
+            for (auto l_CurrentCircle : __Instance->____circleMeshRenderers)
+            {
+                PColorNoteVisuals_ComponentsCache->Clear();
+                l_CurrentCircle->GetComponentsForListInternal(reinterpret_cast<System::Type*>(csTypeOf(MaterialPropertyBlockController*).convert()), PColorNoteVisuals_ComponentsCache.Ptr());
+
+                auto l_Count = PColorNoteVisuals_ComponentsCache->get_Count();
+                auto l_Items = PColorNoteVisuals_ComponentsCache->____items->_values;
+                for (auto l_I = 0; l_I < l_Count; ++l_I)
+                {
+                    auto l_CurrentBlock = reinterpret_cast<MaterialPropertyBlockController*>(l_Items[l_I]);
+                    if (!l_CurrentBlock->____materialPropertyBlock)
+                        l_CurrentBlock->____materialPropertyBlock = MaterialPropertyBlock::New_ctor();
+
+                    l_Cache->noteCircleMeshRenderersMaterialPropertyBlockControllers[l_NoteCircleMeshRenderersMaterialPropertyBlockControllersIt++] = l_CurrentBlock;
+
+                    if (l_NoteCircleMeshRenderersMaterialPropertyBlockControllersIt >= PColorNoteVisualsCache_MaxSubArray)
+                        Logger::Instance->Error(u"[Patches][ColorNoteVisuals_HandleNoteControllerDidInit] Limit reached for l_NoteCircleMeshRenderersMaterialPropertyBlockControllersIt");
+                }
+            }
+
+            l_Cache->materialPropertyBlockControllers                       [l_MaterialPropertyBlockControllersIt++                       ] = nullptr;
+            l_Cache->noteArrows                                             [l_NoteArrowsIt++                                             ] = nullptr;
+            l_Cache->noteArrowGlows                                         [l_NoteArrowGlowsIt++                                         ] = nullptr;
+            l_Cache->noteArrowGlowsMaterialPropertyBlockControllers         [l_NoteArrowGlowsMaterialPropertyBlockControllersIt++         ] = nullptr;
+            l_Cache->noteCircleMeshRenderersMaterialPropertyBlockControllers[l_NoteCircleMeshRenderersMaterialPropertyBlockControllersIt++] = nullptr;
         }
 
         ////////////////////////////////////////////////////////////////////////////
@@ -317,14 +342,20 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
 
         auto l_IsBurstNote  = l_Cache->burstSliderGameNoteController != nullptr;
         auto l_CircleScale  = l_IsBurstNote ? PColorNoteVisuals_BurstCircleScale : (l_CutDirection == NoteCutDirection::Any ? PColorNoteVisuals_CircleScale : PColorNoteVisuals_PrecisionCircleScale);
-        auto l_DotEnabled   = l_CutDirection == NoteCutDirection::Any ? PColorNoteVisuals_CircleEnabled : (PColorNoteVisuals_CircleEnabled && PColorNoteVisuals_CircleForceEnabled);
+        auto l_DotEnabled       = l_CutDirection == NoteCutDirection::Any ? PColorNoteVisuals_CircleEnabled : (PColorNoteVisuals_CircleEnabled && PColorNoteVisuals_CircleForceEnabled);
         auto l_DotColor     = ColorU::WithAlpha(PColorNoteVisuals_OverrideDotColors ? (l_ColorType == ColorType::ColorB ? PColorNoteVisuals_RightCircleColor : PColorNoteVisuals_LeftCircleColor) : l_BaseColor, PColorNoteVisuals_DotAlpha);
 
         for (auto l_CurrentRenderer : __Instance->____circleMeshRenderers)
         {
             l_CurrentRenderer->set_enabled                    (l_DotEnabled);
             l_CurrentRenderer->get_transform()->set_localScale(l_CircleScale);
-            l_CurrentRenderer->get_material()->set_color      (l_DotColor);
+        }
+
+        for (auto l_Current : l_Cache->noteCircleMeshRenderersMaterialPropertyBlockControllers)
+        {
+            if (!l_Current) break;
+            l_Current->____materialPropertyBlock->SetColor(PColorNoteVisuals_ColorID, l_DotColor);
+            l_Current->ApplyChanges();
         }
     }
 

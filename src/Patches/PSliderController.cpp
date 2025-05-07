@@ -36,11 +36,9 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
         SliderController_Init, &SliderController::Init,
         void, SliderController* __Instance,
 
-        SliderController::LengthType __a, SliderData* __b, float   __c, Vector3 __d,
-        Vector3                      __e, Vector3     __f, Vector3 __g, float   __h,
-        float                        __i, float       __j, float   __k)
+        SliderController_LengthType __a, SliderData* __b, ByRef<SliderSpawnData> __c, float __d, float __e)
     {
-        SliderController_Init(__Instance, __a, __b, __c, __d, __e, __f, __g, __h, __i, __j, __k);
+        SliderController_Init(__Instance, __a, __b, __c, __d, __e);
 
         if (PSliderController_Enabled)
             __Instance->____initColor = ColorU::WithAlpha(__Instance->____initColor, PSliderController_Opacity);

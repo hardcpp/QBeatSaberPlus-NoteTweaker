@@ -102,11 +102,9 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
         GameNoteController_Init, &GameNoteController::Init,
         void, GameNoteController* __Instance,
 
-        NoteData*               __a, float __b, Vector3 __c, Vector3 __d,
-        Vector3                 __e, float __f, float   __g, float   __h,
-        NoteVisualModifierType  __i, float __j, float   __k)
+        NoteData * __a, ByRef<NoteSpawnData> __b, NoteVisualModifierType __c , float __d, float __e)
     {
-        GameNoteController_Init(__Instance, __a, __b, __c, __d, __e, __f, __g, __h, __i, __j, __k);
+        GameNoteController_Init(__Instance, __a, __b, __c, __d, __e);
 
         if (!PGameNoteController_Enabled && !PGameNoteController_TempEnabled)
             return;
