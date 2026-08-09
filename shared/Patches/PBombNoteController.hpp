@@ -3,8 +3,14 @@
 #include <CP_SDK/Utils/Il2cpp.hpp>
 
 #include <UnityEngine/MonoBehaviour.hpp>
+#include <UnityEngine/Color.hpp>
 
 namespace QBeatSaberPlus_NoteTweaker::Patches {
+
+    namespace _v
+    {
+        using namespace UnityEngine;
+    }
 
     /// @brief BombNoteController patch
     class PBombNoteController
@@ -19,6 +25,10 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
             /// @param p_Enabled Is it enabled
             /// @param p_Scale   New scale
             static void SetTemp(bool p_Enabled, float p_Scale);
+            /// @brief Set bomb color override
+            /// @param p_Enabled  Is override enabled?
+            /// @param p_NewColor New color
+            static void SetBombColorOverride(bool p_Enabled, _v::Color p_NewColor);
 
         private:
             /// @brief Is note scaling enabled
