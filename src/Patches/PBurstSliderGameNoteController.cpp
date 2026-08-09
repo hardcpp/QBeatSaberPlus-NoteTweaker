@@ -1,6 +1,5 @@
 #include "Patches/PBurstSliderGameNoteController.hpp"
 #include "NTConfig.hpp"
-#include "Logger.hpp"
 
 #include <CP_SDK/Unity/Operators.hpp>
 #include <CP_SDK/Utils/MonoPtr.hpp>
@@ -30,8 +29,9 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
     ////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
 
-    static bool     PBurstSliderGameNoteController_Enabled     = false;
-    static bool     PBurstSliderGameNoteController_TempEnabled = false;
+    static bool     PBurstSliderGameNoteController_Enabled          = false;
+    static bool     PBurstSliderGameNoteController_TempEnabled      = false;
+    static bool     PBurstSliderGameNoteController_WasTempEnabled   = false;
     static Vector3  PBurstSliderGameNoteController_NoteScale;
     static Vector3  PBurstSliderGameNoteController_NoteInvScale;
     static Vector3  PBurstSliderGameNoteController_TempNoteScale;
@@ -52,7 +52,10 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
         PBurstSliderGameNoteController_NoteInvScale          = (1.0f / l_NoteScale) * Vector3::get_one();
 
         if (p_OnSceneSwitch)
-            PBurstSliderGameNoteController_TempEnabled = false;
+        {
+            PBurstSliderGameNoteController_TempEnabled      = false;
+            PBurstSliderGameNoteController_WasTempEnabled   = false;
+        }
     }
     /// @brief Set temp config
     /// @param p_Enabled Is it enabled
@@ -67,6 +70,9 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
         PBurstSliderGameNoteController_TempEnabled           = p_Enabled;
         PBurstSliderGameNoteController_TempNoteScale         = (       p_Scale) * Vector3::get_one();
         PBurstSliderGameNoteController_TempNoteInvScale      = (1.0f / p_Scale) * Vector3::get_one();
+
+        if (p_Enabled)
+            PBurstSliderGameNoteController_WasTempEnabled = true;
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -78,10 +84,10 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
         auto& l_LevelData = CP_SDK_BS::Game::Logic::LevelData();
         if (l_LevelData)
         {
-            auto l_GameplayModifiers = l_LevelData->Data ? l_LevelData->Data->___gameplayModifiers : nullptr;
+            auto l_GameplayModifiers = l_LevelData->Data ? l_LevelData->Data->gameplayModifiers : nullptr;
             if (l_GameplayModifiers)
             {
-                if (l_GameplayModifiers->____proMode || l_GameplayModifiers->____smallCubes || l_GameplayModifiers->____strictAngles)
+                if (l_GameplayModifiers->_proMode || l_GameplayModifiers->_smallCubes || l_GameplayModifiers->_strictAngles)
                     return false;
             }
         }
@@ -106,18 +112,31 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
     {
         BurstSliderGameNoteController_Init(__Instance, __a, __b, __c, __d);
 
-        if (!PBurstSliderGameNoteController_Enabled && !PBurstSliderGameNoteController_TempEnabled)
+        if (!PBurstSliderGameNoteController_Enabled && !PBurstSliderGameNoteController_TempEnabled && !PBurstSliderGameNoteController_WasTempEnabled)
             return;
 
-        __Instance->get_transform()->set_localScale(PBurstSliderGameNoteController_TempEnabled ? PBurstSliderGameNoteController_TempNoteScale : PBurstSliderGameNoteController_NoteScale);
 
-        auto l_BoxScale = PBurstSliderGameNoteController_TempEnabled ? PBurstSliderGameNoteController_TempNoteInvScale : PBurstSliderGameNoteController_NoteInvScale;
+        auto l_NoteScale     = PBurstSliderGameNoteController_NoteScale;
+        auto l_NoteInvScale  = PBurstSliderGameNoteController_NoteInvScale;
 
-        for (auto l_Current : __Instance->____bigCuttableBySaberList)
-            l_Current->get_transform()->set_localScale(l_BoxScale);
+        if (PBurstSliderGameNoteController_TempEnabled)
+        {
+            l_NoteScale     = PBurstSliderGameNoteController_TempNoteScale;
+            l_NoteInvScale  = PBurstSliderGameNoteController_TempNoteInvScale;
+        }
+        else if (PBurstSliderGameNoteController_WasTempEnabled)
+        {
+            l_NoteScale     = PBurstSliderGameNoteController_TempNoteScale;
+            l_NoteInvScale  = PBurstSliderGameNoteController_TempNoteInvScale;
+        }
 
-        for (auto l_Current : __Instance->____smallCuttableBySaberList)
-            l_Current->get_transform()->set_localScale(l_BoxScale);
+        __Instance->get_transform()->set_localScale(l_NoteScale);
+
+        for (auto l_Current : __Instance->_bigCuttableBySaberList)
+          l_Current->get_transform()->set_localScale(l_NoteInvScale);
+
+        for (auto l_Current : __Instance->_smallCuttableBySaberList)
+          l_Current->get_transform()->set_localScale(l_NoteInvScale);
     }
 
 }   ///< namespace QBeatSaberPlus_NoteTweaker::Patches

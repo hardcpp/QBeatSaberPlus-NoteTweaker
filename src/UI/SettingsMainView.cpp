@@ -445,7 +445,7 @@ namespace QBeatSaberPlus_NoteTweaker::UI {
     /// @param p_ListItem Selected item
     void SettingsMainView::ProfilesTab_OnListItemSelect(const CP_SDK::UI::Data::IListItem::Ptr& p_ListItem)
     {
-        m_SelectedItem = *reinterpret_cast<const std::shared_ptr<CP_SDK::UI::Data::TextListItem>*>(&p_ListItem);
+        m_SelectedItem = std::static_pointer_cast<CP_SDK::UI::Data::TextListItem>(p_ListItem);
 
         if (m_SelectedItem)
         {

@@ -1,7 +1,6 @@
 #include "Patches/PColorNoteVisuals.hpp"
 #include "CP_SDK/Utils/Il2cpp.hpp"
 #include "NTConfig.hpp"
-#include "Logger.hpp"
 
 #include <CP_SDK/Unity/Extensions/ColorU.hpp>
 #include <CP_SDK/Unity/Operators.hpp>
@@ -24,12 +23,13 @@
 #include <UnityEngine/MeshRenderer.hpp>
 #include <UnityEngine/Shader.hpp>
 #include <UnityEngine/Transform.hpp>
-#include <string>
+#include <System/Array.hpp>
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wreturn-type-c-linkage"
 
 using namespace CP_SDK::Unity::Extensions;
+using namespace CP_SDK::Utils;
 using namespace GlobalNamespace;
 using namespace System::Collections::Generic;
 using namespace UnityEngine;
@@ -47,13 +47,16 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
     constexpr int PColorNoteVisualsCache_MaxSubArray = 10;
     struct PColorNoteVisualsCache
     {
-        ColorNoteVisuals*                   colorNoteVisuals;
-        BurstSliderGameNoteController*      burstSliderGameNoteController;
-        MaterialPropertyBlockController*    materialPropertyBlockControllers[PColorNoteVisualsCache_MaxSubArray];
-        Transform*                          noteArrows[PColorNoteVisualsCache_MaxSubArray];
-        Transform*                          noteArrowGlows[PColorNoteVisualsCache_MaxSubArray];
-        MaterialPropertyBlockController*    noteArrowGlowsMaterialPropertyBlockControllers[PColorNoteVisualsCache_MaxSubArray];
-        MaterialPropertyBlockController*    noteCircleMeshRenderersMaterialPropertyBlockControllers[PColorNoteVisualsCache_MaxSubArray];
+        using Ptr = std::shared_ptr<PColorNoteVisualsCache>;
+
+        bool isBurstNote = false;
+
+        MonoPtr<Array<Transform*>> arrowMeshRenderersTransforms;
+        MonoPtr<Array<Transform*>> arrowGlowTransforms;
+        MonoPtr<Array<MaterialPropertyBlockController*>> arrowGlowMaterialPropertyBlockControllers;
+
+        MonoPtr<Array<Transform*>> circleMeshRenderersTransforms;
+        MonoPtr<Array<MaterialPropertyBlockController*>> circleMaterialPropertyBlockControllers;
     };
 
     ////////////////////////////////////////////////////////////////////////////
@@ -81,8 +84,14 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
     static Color    PColorNoteVisuals_RightBlockColor;
 
     static bool                                         PColorNoteVisuals_WasInit = false;
-    static std::vector<PColorNoteVisualsCache>          PColorNoteVisuals_Cache;
-    static CP_SDK::Utils::MonoPtr<List_1<Component*>>   PColorNoteVisuals_ComponentsCache;
+
+    static std::map<int, PColorNoteVisualsCache::Ptr>   PColorNoteVisuals_Cache;
+
+    static MonoPtr<List_1<Component*>>                       PColorNoteVisuals_ComponentsCache;
+    static MonoPtr<List_1<Transform*>>                       PColorNoteVisuals_TransformCacheA;
+    static MonoPtr<List_1<Transform*>>                       PColorNoteVisuals_TransformCacheB;
+    static MonoPtr<List_1<MaterialPropertyBlockController*>> PColorNoteVisuals_ArrowGlowMaterialPropertyBlockControllers;
+    static MonoPtr<List_1<MaterialPropertyBlockController*>> PColorNoteVisuals_CircleMaterialPropertyBlockControllers;
 
     ////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
@@ -147,11 +156,20 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
     /// @brief Init specific data and register events
     void PColorNoteVisuals::Init()
     {
-        if (PColorNoteVisuals_Cache.capacity() < 100)
-            PColorNoteVisuals_Cache.reserve(100);
-
         if (!PColorNoteVisuals_ComponentsCache)
             PColorNoteVisuals_ComponentsCache = List_1<Component*>::New_ctor(10);
+
+        if (!PColorNoteVisuals_TransformCacheA)
+            PColorNoteVisuals_TransformCacheA = List_1<Transform*>::New_ctor(10);
+
+        if (!PColorNoteVisuals_TransformCacheB)
+            PColorNoteVisuals_TransformCacheB = List_1<Transform*>::New_ctor(10);
+
+        if (!PColorNoteVisuals_ArrowGlowMaterialPropertyBlockControllers)
+            PColorNoteVisuals_ArrowGlowMaterialPropertyBlockControllers = List_1<MaterialPropertyBlockController *>::New_ctor(10);
+
+        if (!PColorNoteVisuals_CircleMaterialPropertyBlockControllers)
+            PColorNoteVisuals_CircleMaterialPropertyBlockControllers = List_1<MaterialPropertyBlockController *>::New_ctor(10);
 
         if (PColorNoteVisuals_ColorID == 0)
             PColorNoteVisuals_ColorID = Shader::PropertyToID("_Color");
@@ -165,6 +183,12 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
 
                 if (!PColorNoteVisuals_Cache.empty())
                     PColorNoteVisuals_Cache.clear();
+
+                PColorNoteVisuals_ComponentsCache->Clear();
+                PColorNoteVisuals_TransformCacheA->Clear();
+                PColorNoteVisuals_TransformCacheB->Clear();
+                PColorNoteVisuals_ArrowGlowMaterialPropertyBlockControllers->Clear();
+                PColorNoteVisuals_CircleMaterialPropertyBlockControllers->Clear();
             };
 
             PColorNoteVisuals_WasInit = true;
@@ -182,180 +206,177 @@ namespace QBeatSaberPlus_NoteTweaker::Patches {
     {
         ColorNoteVisuals_HandleNoteControllerDidInit(__Instance, __a);
 
-        auto l_Cache = (PColorNoteVisualsCache*)nullptr;
-        auto l_CacheCount           = PColorNoteVisuals_Cache.size();
-        for (auto l_I = 0; l_I < l_CacheCount; ++l_I)
-        {
-            l_Cache = &PColorNoteVisuals_Cache[l_I];
-            if (l_Cache->colorNoteVisuals == __Instance)
-                break;
-        }
-
         if (!PColorNoteVisuals_WasInit)
             PColorNoteVisuals::Init();
 
-        if (!l_Cache || l_Cache->colorNoteVisuals != __Instance)
+        auto instanceID = __Instance->GetInstanceID();
+        auto cached      = std::shared_ptr<PColorNoteVisualsCache>();
+
+        if (PColorNoteVisuals_Cache.contains(instanceID))
+            cached = PColorNoteVisuals_Cache[instanceID];
+
+        if (!cached)
         {
-            PColorNoteVisuals_Cache.push_back({
-                __Instance,
-                __Instance->GetComponent<BurstSliderGameNoteController*>(),
-                {},
-                {},
-                {}
-            });
-            l_Cache = &PColorNoteVisuals_Cache.back();
+            cached = std::make_shared<PColorNoteVisualsCache>();
+            cached->isBurstNote = __Instance->get_gameObject()->GetComponent<BurstSliderGameNoteController*>() != nullptr;
 
-            auto l_MaterialPropertyBlockControllersIt                       = 0;
-            auto l_NoteArrowsIt                                             = 0;
-            auto l_NoteArrowGlowsIt                                         = 0;
-            auto l_NoteArrowGlowsMaterialPropertyBlockControllersIt         = 0;
-            auto l_NoteCircleMeshRenderersMaterialPropertyBlockControllersIt= 0;
+            auto arrowMeshRenderers = __Instance->_arrowMeshRenderers;
+            PColorNoteVisuals_TransformCacheA->Clear();
+            PColorNoteVisuals_TransformCacheB->Clear();
+            PColorNoteVisuals_ArrowGlowMaterialPropertyBlockControllers->Clear();
 
-            for (auto l_CurrentBlock : __Instance->____materialPropertyBlockControllers)
+            for (int i = 0; i < arrowMeshRenderers.size(); ++i)
             {
-                if (!l_CurrentBlock->____materialPropertyBlock)
-                    l_CurrentBlock->____materialPropertyBlock = MaterialPropertyBlock::New_ctor();
+                PColorNoteVisuals_TransformCacheA->Add(arrowMeshRenderers[i]->transform);
 
-                l_Cache->materialPropertyBlockControllers[l_MaterialPropertyBlockControllersIt++] = l_CurrentBlock;
+                auto glowTransform = arrowMeshRenderers[i]->transform->get_parent()->Find("NoteArrowGlow");
+                if (glowTransform)
+                {
+                    PColorNoteVisuals_TransformCacheB->Add(glowTransform);
 
-                if (l_MaterialPropertyBlockControllersIt >= PColorNoteVisualsCache_MaxSubArray)
-                    Logger::Instance->Error(u"[Patches][ColorNoteVisuals_HandleNoteControllerDidInit] Limit reached for l_MaterialPropertyBlockControllersIt");
+                    PColorNoteVisuals_ComponentsCache->Clear();
+                    glowTransform->GetComponentsForListInternal(reinterpret_cast<System::Type*>(csTypeOf(MaterialPropertyBlockController*).convert()), PColorNoteVisuals_ComponentsCache.Ptr());
+
+                    if (PColorNoteVisuals_ComponentsCache->Count > 0)
+                    {
+                        auto l_Count = PColorNoteVisuals_ComponentsCache->get_Count();
+                        auto l_Items = PColorNoteVisuals_ComponentsCache->____items->_values;
+                        for (auto l_I = 0; l_I < l_Count; ++l_I)
+                        {
+                            auto l_CurrentBlock = reinterpret_cast<MaterialPropertyBlockController*>(l_Items[l_I]);
+                            if (!l_CurrentBlock->_materialPropertyBlock)
+                                l_CurrentBlock->_materialPropertyBlock = MaterialPropertyBlock::New_ctor();
+
+                            PColorNoteVisuals_ArrowGlowMaterialPropertyBlockControllers->Add(l_CurrentBlock);
+                        }
+                    }
+                }
             }
 
-            for (auto l_CurrentArrow : __Instance->____arrowMeshRenderers)
+            if (PColorNoteVisuals_TransformCacheA->Count > 0)
+                cached->arrowMeshRenderersTransforms = static_cast<Array<Transform*>*>(PColorNoteVisuals_TransformCacheA->ToArray());
+            if (PColorNoteVisuals_TransformCacheB->Count > 0)
+                cached->arrowGlowTransforms = static_cast<Array<Transform*>*>(PColorNoteVisuals_TransformCacheB->ToArray());
+            if (PColorNoteVisuals_ArrowGlowMaterialPropertyBlockControllers->Count > 0)
+                cached->arrowGlowMaterialPropertyBlockControllers =static_cast<Array<MaterialPropertyBlockController*>*>(PColorNoteVisuals_ArrowGlowMaterialPropertyBlockControllers->ToArray());
+
+            // =====
+
+            auto circleMeshRenderers = __Instance->_circleMeshRenderers;
+            PColorNoteVisuals_TransformCacheA->Clear();
+            PColorNoteVisuals_CircleMaterialPropertyBlockControllers->Clear();
+
+            for (int i = 0; i < circleMeshRenderers.size(); ++i)
             {
-                l_Cache->noteArrows[l_NoteArrowsIt++] = l_CurrentArrow->get_transform();
-                if (l_NoteArrowsIt >= PColorNoteVisualsCache_MaxSubArray)
-                    Logger::Instance->Error(u"[Patches][ColorNoteVisuals_HandleNoteControllerDidInit] Limit reached for l_NoteArrowsIt");
+                PColorNoteVisuals_TransformCacheA->Add(circleMeshRenderers[i]->transform);
 
-                auto l_Glow = l_CurrentArrow->get_transform()->get_parent()->Find("NoteArrowGlow");
-                if (l_Glow)
+                PColorNoteVisuals_ComponentsCache->Clear();
+                circleMeshRenderers[i]->GetComponentsForListInternal(reinterpret_cast<System::Type*>(csTypeOf(MaterialPropertyBlockController*).convert()), PColorNoteVisuals_ComponentsCache.Ptr());
+
+                if (PColorNoteVisuals_ComponentsCache->Count > 0)
                 {
-                    PColorNoteVisuals_ComponentsCache->Clear();
-
-                    l_Cache->noteArrowGlows[l_NoteArrowGlowsIt++] = l_Glow;
-                    l_Glow->GetComponentsForListInternal(reinterpret_cast<System::Type*>(csTypeOf(MaterialPropertyBlockController*).convert()), PColorNoteVisuals_ComponentsCache.Ptr());
-
-                    if (l_NoteArrowGlowsIt >= PColorNoteVisualsCache_MaxSubArray)
-                        Logger::Instance->Error(u"[Patches][ColorNoteVisuals_HandleNoteControllerDidInit] Limit reached for l_NoteArrowGlowsIt");
-
                     auto l_Count = PColorNoteVisuals_ComponentsCache->get_Count();
                     auto l_Items = PColorNoteVisuals_ComponentsCache->____items->_values;
                     for (auto l_I = 0; l_I < l_Count; ++l_I)
                     {
                         auto l_CurrentBlock = reinterpret_cast<MaterialPropertyBlockController*>(l_Items[l_I]);
-                        if (!l_CurrentBlock->____materialPropertyBlock)
-                            l_CurrentBlock->____materialPropertyBlock = MaterialPropertyBlock::New_ctor();
+                        if (!l_CurrentBlock->_materialPropertyBlock)
+                            l_CurrentBlock->_materialPropertyBlock = MaterialPropertyBlock::New_ctor();
 
-                        l_Cache->noteArrowGlowsMaterialPropertyBlockControllers[l_NoteArrowGlowsMaterialPropertyBlockControllersIt++] = l_CurrentBlock;
-
-                        if (l_NoteArrowGlowsMaterialPropertyBlockControllersIt >= PColorNoteVisualsCache_MaxSubArray)
-                            Logger::Instance->Error(u"[Patches][ColorNoteVisuals_HandleNoteControllerDidInit] Limit reached for l_NoteArrowGlowsMaterialPropertyBlockControllersIt");
+                        PColorNoteVisuals_CircleMaterialPropertyBlockControllers->Add(l_CurrentBlock);
                     }
                 }
             }
 
-            for (auto l_CurrentCircle : __Instance->____circleMeshRenderers)
-            {
-                PColorNoteVisuals_ComponentsCache->Clear();
-                l_CurrentCircle->GetComponentsForListInternal(reinterpret_cast<System::Type*>(csTypeOf(MaterialPropertyBlockController*).convert()), PColorNoteVisuals_ComponentsCache.Ptr());
+            if (PColorNoteVisuals_TransformCacheA->Count > 0)
+                cached->circleMeshRenderersTransforms = static_cast<Array<Transform*>*>(PColorNoteVisuals_TransformCacheA->ToArray());
+            if (PColorNoteVisuals_CircleMaterialPropertyBlockControllers->Count > 0)
+                cached->circleMaterialPropertyBlockControllers = static_cast<Array<MaterialPropertyBlockController*>*>(PColorNoteVisuals_CircleMaterialPropertyBlockControllers->ToArray());
 
-                auto l_Count = PColorNoteVisuals_ComponentsCache->get_Count();
-                auto l_Items = PColorNoteVisuals_ComponentsCache->____items->_values;
-                for (auto l_I = 0; l_I < l_Count; ++l_I)
-                {
-                    auto l_CurrentBlock = reinterpret_cast<MaterialPropertyBlockController*>(l_Items[l_I]);
-                    if (!l_CurrentBlock->____materialPropertyBlock)
-                        l_CurrentBlock->____materialPropertyBlock = MaterialPropertyBlock::New_ctor();
+            // =====
 
-                    l_Cache->noteCircleMeshRenderersMaterialPropertyBlockControllers[l_NoteCircleMeshRenderersMaterialPropertyBlockControllersIt++] = l_CurrentBlock;
-
-                    if (l_NoteCircleMeshRenderersMaterialPropertyBlockControllersIt >= PColorNoteVisualsCache_MaxSubArray)
-                        Logger::Instance->Error(u"[Patches][ColorNoteVisuals_HandleNoteControllerDidInit] Limit reached for l_NoteCircleMeshRenderersMaterialPropertyBlockControllersIt");
-                }
-            }
-
-            l_Cache->materialPropertyBlockControllers                       [l_MaterialPropertyBlockControllersIt++                       ] = nullptr;
-            l_Cache->noteArrows                                             [l_NoteArrowsIt++                                             ] = nullptr;
-            l_Cache->noteArrowGlows                                         [l_NoteArrowGlowsIt++                                         ] = nullptr;
-            l_Cache->noteArrowGlowsMaterialPropertyBlockControllers         [l_NoteArrowGlowsMaterialPropertyBlockControllersIt++         ] = nullptr;
-            l_Cache->noteCircleMeshRenderersMaterialPropertyBlockControllers[l_NoteCircleMeshRenderersMaterialPropertyBlockControllersIt++] = nullptr;
+            PColorNoteVisuals_Cache[instanceID] = cached;
         }
 
-        ////////////////////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////////////////
-
-        auto l_NoteData         = __Instance->____noteController->get_noteData();
-        auto l_ColorType        = l_NoteData->get_colorType();
-        auto l_CutDirection     = l_NoteData->get_cutDirection();
-        auto l_OverrideColor    = l_ColorType == ColorType::ColorA ? PColorNoteVisuals_LeftBlockColor : PColorNoteVisuals_RightBlockColor;
-
+        auto colorType = __Instance->_noteController->get_noteData()->get_colorType();
         if (PColorNoteVisuals_BlockColorsEnabled)
         {
-            for (auto l_Current : l_Cache->materialPropertyBlockControllers)
+            auto blockColor = colorType == ColorType::ColorA ? PColorNoteVisuals_LeftBlockColor : PColorNoteVisuals_RightBlockColor;
+
+            for (auto &block : __Instance->_materialPropertyBlockControllers)
             {
-                if (!l_Current) break;
-                l_Current->____materialPropertyBlock->SetColor(PColorNoteVisuals_ColorID, l_OverrideColor);
-                l_Current->ApplyChanges();
+                block->_materialPropertyBlock->SetColor(PColorNoteVisuals_ColorID, blockColor);
+                block->ApplyChanges();
             }
 
-            if (!PColorNoteVisuals_Enabled)
+
+            if (!PColorNoteVisuals_Enabled && cached->arrowGlowMaterialPropertyBlockControllers)
             {
-                auto l_NoteArrowGlowColor = ColorU::WithAlpha(l_OverrideColor, 0.6f);
-                for (auto l_Current : l_Cache->noteArrowGlowsMaterialPropertyBlockControllers)
+                auto newArrowGlowColor = ColorU::WithAlpha(blockColor, 0.6f);
+                for (auto &currentBlock : *cached->arrowGlowMaterialPropertyBlockControllers.Ptr())
                 {
-                    if (!l_Current) break;
-                    l_Current->____materialPropertyBlock->SetColor(PColorNoteVisuals_ColorID, l_NoteArrowGlowColor);
-                    l_Current->ApplyChanges();
+                    currentBlock->materialPropertyBlock->SetColor(PColorNoteVisuals_ColorID, newArrowGlowColor);
+                    currentBlock->ApplyChanges();
                 }
             }
         }
-
-        ////////////////////////////////////////////////////////////////////////////
-        ////////////////////////////////////////////////////////////////////////////
 
         if (!PColorNoteVisuals_Enabled)
             return;
 
-        auto l_BaseColor    = __Instance->____colorManager->ColorForType(l_ColorType);
-        auto l_ArrowColor   = ColorU::WithAlpha(PColorNoteVisuals_OverrideArrowColors ? (l_ColorType == ColorType::ColorB ? PColorNoteVisuals_RightArrowColor  : PColorNoteVisuals_LeftArrowColor) : l_BaseColor, PColorNoteVisuals_ArrowAlpha);
+        auto cutDirection   = __Instance->_noteController->get_noteData()->get_cutDirection();
+        auto dotEnabled     = cutDirection == NoteCutDirection::Any ? PColorNoteVisuals_CircleEnabled : (PColorNoteVisuals_CircleEnabled && PColorNoteVisuals_CircleForceEnabled);
+        auto baseColor      = __Instance->_colorManager->ColorForType(colorType);
+        auto isRight        = colorType == ColorType::ColorB;
+
+        // =====
+
+        auto arrowColor = ColorU::WithAlpha(PColorNoteVisuals_OverrideArrowColors ? (isRight ? PColorNoteVisuals_RightArrowColor : PColorNoteVisuals_LeftArrowColor) : baseColor, PColorNoteVisuals_ArrowAlpha);
 
         if (PColorNoteVisuals_BlockColorsEnabled)
-            l_ArrowColor = ColorU::WithAlpha(l_OverrideColor, 0.6f);
+            arrowColor = ColorU::WithAlpha(isRight ? PColorNoteVisuals_RightBlockColor : PColorNoteVisuals_LeftBlockColor, 0.6f);
 
-        for (auto l_Current : l_Cache->noteArrows)
+        if (cached->arrowMeshRenderersTransforms)
         {
-            if (!l_Current) break;
-            l_Current->set_localScale(PColorNoteVisuals_ArrowScale);
-        }
-        for (auto l_Current : l_Cache->noteArrowGlows)
-        {
-            if (!l_Current) break;
-            l_Current->set_localScale(PColorNoteVisuals_ArrowGlowScale);
-        }
-        for (auto l_Current : l_Cache->noteArrowGlowsMaterialPropertyBlockControllers)
-        {
-            if (!l_Current) break;
-            l_Current->____materialPropertyBlock->SetColor(PColorNoteVisuals_ColorID, l_ArrowColor);
-            l_Current->ApplyChanges();
+            for (auto currentMesh: *cached->arrowMeshRenderersTransforms.Ptr())
+                currentMesh->localScale = PColorNoteVisuals_ArrowScale;
         }
 
-        auto l_IsBurstNote  = l_Cache->burstSliderGameNoteController != nullptr;
-        auto l_CircleScale  = l_IsBurstNote ? PColorNoteVisuals_BurstCircleScale : (l_CutDirection == NoteCutDirection::Any ? PColorNoteVisuals_CircleScale : PColorNoteVisuals_PrecisionCircleScale);
-        auto l_DotEnabled       = l_CutDirection == NoteCutDirection::Any ? PColorNoteVisuals_CircleEnabled : (PColorNoteVisuals_CircleEnabled && PColorNoteVisuals_CircleForceEnabled);
-        auto l_DotColor     = ColorU::WithAlpha(PColorNoteVisuals_OverrideDotColors ? (l_ColorType == ColorType::ColorB ? PColorNoteVisuals_RightCircleColor : PColorNoteVisuals_LeftCircleColor) : l_BaseColor, PColorNoteVisuals_DotAlpha);
-
-        for (auto l_CurrentRenderer : __Instance->____circleMeshRenderers)
+        if (cached->arrowGlowTransforms)
         {
-            l_CurrentRenderer->set_enabled                    (l_DotEnabled);
-            l_CurrentRenderer->get_transform()->set_localScale(l_CircleScale);
+            for (auto currentTransform: *cached->arrowGlowTransforms.Ptr())
+                currentTransform->localScale = PColorNoteVisuals_ArrowGlowScale;
         }
 
-        for (auto l_Current : l_Cache->noteCircleMeshRenderersMaterialPropertyBlockControllers)
+        if (cached->arrowGlowMaterialPropertyBlockControllers)
         {
-            if (!l_Current) break;
-            l_Current->____materialPropertyBlock->SetColor(PColorNoteVisuals_ColorID, l_DotColor);
-            l_Current->ApplyChanges();
+            for (auto currentBlock : *cached->arrowGlowMaterialPropertyBlockControllers.Ptr())
+            {
+                currentBlock->materialPropertyBlock->SetColor(PColorNoteVisuals_ColorID, arrowColor);
+                currentBlock->ApplyChanges();
+            }
+        }
+
+        // =====
+
+        auto dotColor = ColorU::WithAlpha(PColorNoteVisuals_OverrideDotColors ? (isRight ? PColorNoteVisuals_RightCircleColor : PColorNoteVisuals_LeftCircleColor) : baseColor, PColorNoteVisuals_DotAlpha);
+        auto circleScale = cached->isBurstNote ? PColorNoteVisuals_BurstCircleScale : (cutDirection == NoteCutDirection::Any ? PColorNoteVisuals_CircleScale : PColorNoteVisuals_PrecisionCircleScale);
+
+        if (cached->circleMeshRenderersTransforms) {
+            for (auto currentMesh : *cached->circleMeshRenderersTransforms.Ptr())
+                currentMesh->localScale = circleScale;
+        }
+
+        for (int i = 0; i < __Instance->_circleMeshRenderers.size(); ++i)
+            __Instance->_circleMeshRenderers[i]->enabled = dotEnabled;
+
+        if (cached->circleMaterialPropertyBlockControllers)
+        {
+            for (auto currentBlock : *cached->circleMaterialPropertyBlockControllers.Ptr())
+            {
+                currentBlock->materialPropertyBlock->SetColor(PColorNoteVisuals_ColorID, dotColor);
+                currentBlock->ApplyChanges();
+            }
         }
     }
 
