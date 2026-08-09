@@ -7,7 +7,7 @@
     "info": {
       "name": "QBeatSaberPlus-NoteTweaker",
       "id": "qbeatsaberplus-notetweaker",
-      "version": "6.4.1",
+      "version": "6.4.5",
       "url": "https://github.com/hardcpp/QBeatSaberPlus-NoteTweaker",
       "additionalData": {
         "overrideSoName": "libqbeatsaberplus-notetweaker.so",
@@ -38,7 +38,7 @@
           "pwsh ./createqmod.ps1 -clean"
         ]
       },
-      "ndk": "^27.2.12479018",
+      "ndk": "^27.3.13750724",
       "qmodIncludeDirs": [
         "build",
         "extern/libs"
@@ -59,7 +59,7 @@
       },
       {
         "id": "custom-types",
-        "versionRange": "^0.18.3",
+        "versionRange": "^0.18.4",
         "additionalData": {}
       },
       {
@@ -79,7 +79,7 @@
       },
       {
         "id": "paper2_scotland2",
-        "versionRange": "^4.6.4",
+        "versionRange": "^4.8.0",
         "additionalData": {}
       },
       {
@@ -89,7 +89,7 @@
       },
       {
         "id": "chatplex-sdk-bs",
-        "versionRange": "^6.4.1",
+        "versionRange": "^6.4.5",
         "additionalData": {
           "private": true
         }
@@ -99,64 +99,14 @@
   "restoredDependencies": [
     {
       "dependency": {
-        "id": "paper2_scotland2",
-        "versionRange": "=4.6.4",
-        "additionalData": {
-          "soLink": "https://github.com/Fernthedev/paperlog/releases/download/v4.6.4/libpaper2_scotland2.so",
-          "overrideSoName": "libpaper2_scotland2.so",
-          "modLink": "https://github.com/Fernthedev/paperlog/releases/download/v4.6.4/paper2_scotland2.qmod",
-          "branchName": "version/v4_6_4",
-          "compileOptions": {
-            "systemIncludes": [
-              "shared/utfcpp/source"
-            ]
-          },
-          "cmake": false
-        }
-      },
-      "version": "4.6.4"
-    },
-    {
-      "dependency": {
-        "id": "libil2cpp",
-        "versionRange": "=0.4.0",
-        "additionalData": {
-          "headersOnly": true,
-          "compileOptions": {
-            "systemIncludes": [
-              "il2cpp/external/baselib/Include",
-              "il2cpp/external/baselib/Platforms/Android/Include"
-            ]
-          }
-        }
-      },
-      "version": "0.4.0"
-    },
-    {
-      "dependency": {
-        "id": "chatplex-sdk-bs",
-        "versionRange": "=6.4.1",
-        "additionalData": {
-          "soLink": "https://github.com/hardcpp/QuestChatPlexSDK-BS/releases/download/v6.4.1/libchatplex-sdk-bs.so",
-          "debugSoLink": "https://github.com/hardcpp/QuestChatPlexSDK-BS/releases/download/v6.4.1/debug_libchatplex-sdk-bs.so",
-          "overrideSoName": "libchatplex-sdk-bs.so",
-          "modLink": "https://github.com/hardcpp/QuestChatPlexSDK-BS/releases/download/v6.4.1/ChatPlexSDK-BS.qmod",
-          "branchName": "version/v6_4_1",
-          "cmake": true
-        }
-      },
-      "version": "6.4.1"
-    },
-    {
-      "dependency": {
         "id": "custom-types",
-        "versionRange": "=0.18.3",
+        "versionRange": "=0.18.4",
         "additionalData": {
-          "soLink": "https://github.com/QuestPackageManager/Il2CppQuestTypePatching/releases/download/v0.18.3/libcustom-types.so",
-          "debugSoLink": "https://github.com/QuestPackageManager/Il2CppQuestTypePatching/releases/download/v0.18.3/debug_libcustom-types.so",
+          "soLink": "https://github.com/QuestPackageManager/Il2CppQuestTypePatching/releases/download/v0.18.4/libcustom-types.so",
+          "debugSoLink": "https://github.com/QuestPackageManager/Il2CppQuestTypePatching/releases/download/v0.18.4/debug_libcustom-types.so",
           "overrideSoName": "libcustom-types.so",
-          "modLink": "https://github.com/QuestPackageManager/Il2CppQuestTypePatching/releases/download/v0.18.3/CustomTypes.qmod",
-          "branchName": "version/v0_18_3",
+          "modLink": "https://github.com/QuestPackageManager/Il2CppQuestTypePatching/releases/download/v0.18.4/CustomTypes.qmod",
+          "branchName": "version/v0_18_4",
           "compileOptions": {
             "cppFlags": [
               "-Wno-invalid-offsetof"
@@ -165,7 +115,24 @@
           "cmake": true
         }
       },
-      "version": "0.18.3"
+      "version": "0.18.4"
+    },
+    {
+      "dependency": {
+        "id": "kaleb",
+        "versionRange": "=0.1.9",
+        "additionalData": {
+          "headersOnly": true,
+          "branchName": "version/v0_1_9",
+          "compileOptions": {
+            "cppFlags": [
+              "-DKALEB_VERSION=\"0.1.9\""
+            ]
+          },
+          "cmake": false
+        }
+      },
+      "version": "0.1.9"
     },
     {
       "dependency": {
@@ -193,6 +160,25 @@
     },
     {
       "dependency": {
+        "id": "paper2_scotland2",
+        "versionRange": "=4.8.0",
+        "additionalData": {
+          "soLink": "https://github.com/Fernthedev/paperlog/releases/download/v4.8.0/libpaper2_scotland2.so",
+          "overrideSoName": "libpaper2_scotland2.so",
+          "modLink": "https://github.com/Fernthedev/paperlog/releases/download/v4.8.0/paper2_scotland2.qmod",
+          "branchName": "version/v4_8_0",
+          "compileOptions": {
+            "systemIncludes": [
+              "shared/utfcpp/source"
+            ]
+          },
+          "cmake": false
+        }
+      },
+      "version": "4.8.0"
+    },
+    {
+      "dependency": {
         "id": "conditional-dependencies",
         "versionRange": "=0.3.0",
         "additionalData": {
@@ -202,6 +188,51 @@
         }
       },
       "version": "0.3.0"
+    },
+    {
+      "dependency": {
+        "id": "scotland2",
+        "versionRange": "=0.1.7",
+        "additionalData": {
+          "soLink": "https://github.com/sc2ad/scotland2/releases/download/v0.1.7/libsl2.so",
+          "debugSoLink": "https://github.com/sc2ad/scotland2/releases/download/v0.1.7/debug_libsl2.so",
+          "overrideSoName": "libsl2.so",
+          "branchName": "version/v0_1_7"
+        }
+      },
+      "version": "0.1.7"
+    },
+    {
+      "dependency": {
+        "id": "libcurl",
+        "versionRange": "=8.5.0",
+        "additionalData": {
+          "staticLinking": true,
+          "soLink": "https://github.com/darknight1050/openssl-curl-android/releases/download/v8.5.0/libcurl.a",
+          "overrideSoName": "libcurl.a",
+          "branchName": "version-v8.5.0"
+        }
+      },
+      "version": "8.5.0"
+    },
+    {
+      "dependency": {
+        "id": "fmt",
+        "versionRange": "=11.0.2",
+        "additionalData": {
+          "headersOnly": true,
+          "branchName": "version/v11_0_2",
+          "compileOptions": {
+            "systemIncludes": [
+              "fmt/include/"
+            ],
+            "cppFlags": [
+              "-DFMT_HEADER_ONLY"
+            ]
+          }
+        }
+      },
+      "version": "11.0.2"
     },
     {
       "dependency": {
@@ -225,65 +256,34 @@
     },
     {
       "dependency": {
-        "id": "libcurl",
-        "versionRange": "=8.5.0",
+        "id": "chatplex-sdk-bs",
+        "versionRange": "=6.4.5",
         "additionalData": {
-          "staticLinking": true,
-          "soLink": "https://github.com/darknight1050/openssl-curl-android/releases/download/v8.5.0/libcurl.a",
-          "overrideSoName": "libcurl.a",
-          "branchName": "version-v8.5.0"
+          "soLink": "https://github.com/hardcpp/QuestChatPlexSDK-BS/releases/download/v6.4.5/libchatplex-sdk-bs.so",
+          "debugSoLink": "https://github.com/hardcpp/QuestChatPlexSDK-BS/releases/download/v6.4.5/debug_libchatplex-sdk-bs.so",
+          "overrideSoName": "libchatplex-sdk-bs.so",
+          "modLink": "https://github.com/hardcpp/QuestChatPlexSDK-BS/releases/download/v6.4.5/ChatPlexSDK-BS.qmod",
+          "branchName": "version/v6_4_5",
+          "cmake": true
         }
       },
-      "version": "8.5.0"
+      "version": "6.4.5"
     },
     {
       "dependency": {
-        "id": "scotland2",
-        "versionRange": "=0.1.6",
-        "additionalData": {
-          "soLink": "https://github.com/sc2ad/scotland2/releases/download/v0.1.6/libsl2.so",
-          "debugSoLink": "https://github.com/sc2ad/scotland2/releases/download/v0.1.6/debug_libsl2.so",
-          "overrideSoName": "libsl2.so",
-          "branchName": "version/v0_1_6"
-        }
-      },
-      "version": "0.1.6"
-    },
-    {
-      "dependency": {
-        "id": "fmt",
-        "versionRange": "=11.0.2",
+        "id": "libil2cpp",
+        "versionRange": "=0.4.0",
         "additionalData": {
           "headersOnly": true,
-          "branchName": "version/v11_0_2",
           "compileOptions": {
             "systemIncludes": [
-              "fmt/include/"
-            ],
-            "cppFlags": [
-              "-DFMT_HEADER_ONLY"
+              "il2cpp/external/baselib/Include",
+              "il2cpp/external/baselib/Platforms/Android/Include"
             ]
           }
         }
       },
-      "version": "11.0.2"
-    },
-    {
-      "dependency": {
-        "id": "kaleb",
-        "versionRange": "=0.1.9",
-        "additionalData": {
-          "headersOnly": true,
-          "branchName": "version/v0_1_9",
-          "compileOptions": {
-            "cppFlags": [
-              "-DKALEB_VERSION=\"0.1.9\""
-            ]
-          },
-          "cmake": false
-        }
-      },
-      "version": "0.1.9"
+      "version": "0.4.0"
     }
   ]
 }
